@@ -208,16 +208,16 @@ class LocationSignActivity : AppCompatActivity() {
         val inRange = distance <= targetRange
 
         tvInfo.text = buildString {
-            append("📍 当前位置\n")
+            append("[当前位置]\n")
             append("纬度: $selectedLat\n")
             append("经度: $selectedLon\n")
             append("地址: $selectedAddress\n")
             if (targetLat != 0.0 && targetLon != 0.0) {
-                append("\n🎯 签到目标\n")
+                append("\n[签到目标]\n")
                 append("位置: $targetName\n")
                 append("范围: ${targetRange}米\n")
                 append("距离: ${String.format("%.1f", distance)}米\n")
-                append(if (inRange) "\n✅ 在签到范围内" else "\n❌ 不在签到范围内")
+                append(if (inRange) "\n[在签到范围内]" else "\n[不在签到范围内]")
             }
         }
     }

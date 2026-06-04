@@ -58,7 +58,7 @@
             android:layout_marginBottom="16dp"
             android:layout_marginRight="16dp"
             android:background="@drawable/bg_button_primary"
-            android:text="📍"
+            android:text="⊕"
             android:textSize="20sp"
             android:textColor="#FFFFFF" />
     </FrameLayout>
