@@ -1,0 +1,1 @@
+{"data":null,"message":"Failed to handle request [GET http://mobilelearn.chaoxing.com/page/sign/pcSignPublishIndex?courseId=264381020&classId=148304228&fid=336900&cpi=519058168&otherId=4]: An error happened during template parsing (template: \"class path resource [page/sign/pcSignPublishIndex.html]\")","status":500}

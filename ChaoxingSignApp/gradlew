@@ -1,0 +1,3 @@
+#!/bin/sh
+GRADLE_HOME="/c/Users/win/.gradle/wrapper/dists/gradle-8.13-bin/ap7pdhvhnjtc6mxtzz89gkh0c/gradle-8.13"
+exec "$GRADLE_HOME/bin/gradle" "$@"

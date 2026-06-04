@@ -1,0 +1,2240 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>活动库</title>
+    <script type="text/javascript" src="/widget/service-domain/serviceDomainScript?DB_STRATEGY=RANDOM"></script>
+    <link rel="icon" href="https://mobilelearn-static.chaoxing.com/mobilelearn/xinfanya/images/favicon.ico" type="image/x-icon"/>
+    <link type="text/css" rel="stylesheet" href="https://mobilelearn-static.chaoxing.com/mobilelearn/xinfanya/style/common.css?v=1780480565513">
+    <link type="text/css" rel="stylesheet" href="https://mobilelearn-static.chaoxing.com/mobilelearn/xinfanya/style/pop.css?v=1780480565513">
+    <link type="text/css" rel="stylesheet" href="https://mobilelearn-static.chaoxing.com/mobilelearn/xinfanya/iconmoon/style.css?v=1780480565513">
+    <!-- 公共头部 -->
+    <link type="text/css" rel="stylesheet" href="https://mobilelearn-static.chaoxing.com/mobilelearn/xinfanya/style/common/common-header.css?v=1780480565513">
+    <!-- select2 -->
+    <link type="text/css" rel="stylesheet" href="https://mobilelearn-static.chaoxing.com/mobilelearn/xinfanya/js/lib/select2/select2.min.css?v=1780480565513">
+    <link type="text/css" rel="stylesheet" href="https://mobilelearn-static.chaoxing.com/mobilelearn/xinfanya/style/style.css?v=1780480565513">
+    <link type="text/css" rel="stylesheet" href="https://mobilelearn-static.chaoxing.com/mobilelearn/xinfanya/style/activate/activateBank.css?v=1780480565513">
+
+    <link href="https://mobilelearn-static.chaoxing.com/mobilelearn/xinfanya/style/activate/edit-act.css?v=1780480565513" type="text/css" rel="stylesheet">
+    <link href="https://mobilelearn-static.chaoxing.com/mobilelearn/xinfanya/style/activate/editActPops.css?v=1780480565513" type="text/css" rel="stylesheet">
+
+    <!--笔记资源弹框的css-->
+<!--    <link th:href="${serviceDomain.staticResourceDomainWithProtocol}+@{/xinfanya/style/ppt/editActPops.css(v=${_sv_})}" type="text/css" rel="stylesheet">-->
+    <link type="text/css" rel="stylesheet" href="https://mobilelearn-static.chaoxing.com/mobilelearn/xinfanya/style/common/moveTo.css?v=1780480565513">
+    <link type="text/css" rel="stylesheet" href="https://mobilelearn-static.chaoxing.com/mobilelearn/xinfanya/style/activate/newActiveLibraryList.css?v=1780480565513">
+    <link rel="stylesheet" href="https://mobilelearn-static.chaoxing.com/mobilelearn/xinfanya/style/component/compSignin.css?v=1780480565513" />
+    <style>
+        [v-cloak]{
+            display:none;
+        }
+        /*.breadcrumb > li:nth-child(1) + li {background:url(../../xinfanya/images/breadcrumb.png) no-repeat 4px center; padding-left: 14px;margin-top: 0px;color: #A8A8B3;}*/
+        /*.breadcrumb > li:nth-child(2) + li {background:url(../../xinfanya/images/breadcrumb.png) no-repeat 4px center; color: #A8A8B3;padding-left: 14px;}*/
+        .activate-bank .fixed-con {margin-top: 26px}
+        .set-box .select-wrap {width: 60px;}
+        .null-data {
+            padding: 146px 0 163px;
+            text-align: center;
+            font-size: 16px;
+            color: #8A8B99;
+        }
+        .icon-bb img{border-radius: 8px;}
+        .activate-bank {
+            position: relative;
+        }
+        .addMargin{
+            margin-left: 22px;
+        }
+
+        /*活动库计时器样式*/
+        .popDiv .pop-timer-container .set-box .clearaft {
+            margin-top: 14px;
+            width: 580px;
+            height: 66px;
+            gap: 14px;
+            border-radius: 5px;
+            background: #F7F8FA;
+            position: relative;
+        }
+        .pop-timer-container .timerClose {
+            display: none;
+        }
+        .popDiv .pop-timer-container .set-box .clearaft .seleteTime {
+            position: relative;
+            top: 50%;
+            transform: translateY(-50%);
+            text-align: center;
+            margin-left: 20px;
+        }
+        .popDiv .pop-timer-container .countdown-radio-list .operate-list-group {
+            margin-right: 1.4rem;
+        }
+        .activate-bank .footer .footer-con {
+            width: 100%;
+        }
+        .activate-bank .footer {
+            min-width: unset;
+        }
+    </style>
+</head>
+<body>
+<div class="activate-bank" id="activateBank" v-cloak>
+    <div class="fixed-con">
+        <ul class="breadcrumb" v-if="popPage!=2 && returnType!='8'">
+            <li class="back"><a v-on:click="goBack()" href="#" class="icon-back">{{$t('language.back')}}</a></li><!--返回-->
+            <li><a v-on:click="goBack()" href="#">{{openPath()}}</a></li>
+            <li class="active">{{$t('language.activityLibrary')}}</li><!--活动库-->
+        </ul>
+        <!-- 中间内容 start -->
+        <div class="center-con bgwhite fs14">
+            <!-- 活动库搜索筛选 start -->
+            <div class="center-top">
+                <div class="activate-title fs18 colorDeep fl font500">{{$t('language.activityLibrary')}}</div><!--活动库-->
+                <div class="right-box fr">
+                    <div class="input-box">
+                        <span class="ipt-checkbox list-input inlineMiddle" v-on:click="showMyOwnActive()">
+                            <input type="checkbox"  id="activateName1"><i class="icon-checkbox"></i>
+                        </span>
+                        <label class="inlineMiddle" for="activateName1" >{{$t('language.onlyshow')}}</label><!--仅显示自己创建的活动-->
+                    </div>
+                    <div class="search-con inlineBlock">
+                        <div class="dataSearch">
+                            <input type="text" name="" value="" class="dataSearch_input fl"
+                                   :placeholder="$t('language.search')" id="searchActiveInput" v-on:keyup="searchback()"><!--搜索-->
+                            <input type="button" v-on:click="searchActive()" name="" value="" class="dataSearch_bnt fl">
+                        </div>
+<!--                        <div class="search-list txt-l colorIn">-->
+<!--                            &lt;!&ndash;                            <span>平面构成</span>&ndash;&gt;-->
+<!--                            &lt;!&ndash;                            <span>现代产品开发三原则是哪些？</span>&ndash;&gt;-->
+<!--                            &lt;!&ndash;                            <span>抢答活动</span>&ndash;&gt;-->
+<!--                            &lt;!&ndash;                            <span>地理测试题</span>&ndash;&gt;-->
+<!--                            &lt;!&ndash;                            <span>视觉传达设计</span>&ndash;&gt;-->
+<!--                        </div>-->
+                    </div>
+                </div>
+                <a href="javascript:;" class="filter-btn inlineBlock fs14" style="display: none;">
+                    <!--<img src="../../images/activate/filter.png" alt="">-->
+                    <i class="icon-filter"></i>
+                    <span>{{$t('language.filtrate')}}</span><!--筛选-->
+                </a>
+                <div class="clear"></div>
+                <div class="filter-box fs14 colorDeep">
+                    <div class="select-wrap">
+                        <label class="select-label">{{$t('language.activeType')}}</label><!--活动类型-->
+                        <input type="text" readonly :placeholder="$t('language.all')" class="select-inp fs14" id="zselectGrade"/><!--全部-->
+                        <span class="icon icon-triangle-down"></span>
+                    </div>
+                    <div class="select-wrap">
+                        <label class="select-label">{{$t('language.courses')}}</label><!--课程-->
+                        <input type="text" readonly :placeholder="currentCourseName" class="select-inp fs14" id="zselectGrade1"/>
+                        <span class="icon icon-triangle-down"></span>
+                    </div>
+                    <div class="select-wrap">
+                        <label class="select-label">{{$t('language.classes')}}</label><!--班级-->
+                        <input type="text" readonly :placeholder="currentClassName" class="select-inp fs14" id="zselectGrade2"/>
+                        <span class="icon icon-triangle-down"></span>
+                    </div>
+                    <a href="#" v-on:click="loadActiveList()" class="jb_btn jb_btn_92 fr fs14">{{$t('language.filtrate')}}</a><!--筛选-->
+                </div>
+            </div>
+            <!-- 活动库搜索筛选 end -->
+
+            <!--无数据提示-->
+            <div v-if="templateActiveList.length==0&&searchTemplateActiveList.length==0" class="null-data">{{$t('language.NoActivity2')}}</div><!--所选课程暂无活动，您可筛选其他课程-->
+            <!-- 活动列表 start -->
+            <div class="activate-list borderT1px" style="display:block" id="list-content-wrapper1">
+
+                <!-- activeListgGroupByName strat-->
+                <div class="group-lists-wrapper"  v-for="groupActive in activeListgGroupByName" v-if="groupActive.activeList0.length>0||groupActive.activeList1.length>0||groupActive.activeList2.length>0" :planId="groupActive.id">
+                    <div class="wrapper-title" >
+                        <div class="input-box inlineMiddle" onclick="initThisGroupSelectbox(this)">
+                            <span class="ipt-checkbox list-input">
+                                    <input type="checkbox"  v-bind:value="groupActive.id"><i class="icon-checkbox"></i>
+                            </span>
+                        </div>
+                        <div class="inlineMiddle toggle-btn"  onclick="rollGroup(this)">
+                            <span class="title-name fs16 colorDeep font500" v-text="groupActive.name"></span>
+                            <span class="title-icon"></span>
+                        </div>
+                    </div>
+                    <ul class="wrapper-list">
+                        <!--进行中 begin-->
+                        <li v-for="active in groupActive.activeList1" class="list" :id="active.activeId">
+                            <input type="hidden" class="contentInput"  v-bind:value="active.content" >
+                            <input type="hidden" class="otherIdInput"  v-bind:value="active.otherId" >
+                            <input type="hidden" class="activeIdInput"  v-bind:value="active.activeId" >
+                            <input type="hidden" class="screenOpenurlInput"  v-bind:value="active.screenOpenurl" >
+                            <div class="input-box">
+                                <span class="ipt-checkbox list-input">
+                                    <input type="checkbox" name="activateName" :id="'checkbox'+active.activeId" v-bind:value="active.activeId" onclick="initSelectbox(this)"><i class="icon-checkbox"></i>
+                                </span>
+                            </div>
+                            <template v-if="active.activeType == 2">
+                                <div class="tag icon-signin list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 4">
+                                <div class="tag icon-qd list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 5">
+                                <div class="tag icon-zttl list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 50">
+                                <div class="tag icon-zttl list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 11">
+                                <div class="tag icon-xr list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 14">
+                                <div class="tag icon-wj list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 23">
+                                <div class="tag icon-pf list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 35&&active.isnorm==1&&active.isSpecialPersonalTask==0">
+                                <div class="tag icon-fzrw list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 35&&active.isnorm==1&&active.isSpecialPersonalTask==1">
+                                <div class="tag icon-fzrw_1 list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 35&&active.isnorm==0">
+                                <div class="tag icon-fzrw_1 list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 42">
+                                <div class="tag icon-cy list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 47">
+                                <div class="tag icon-jsq list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 49">
+                                <div class="tag icon-bb list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 44">
+                                <div class="tag icon-bb  list-name-opacity"><img :src="active.notStartLogo?active.notStartLogo:active.logo" alt="" style="width:100%;height:100%;"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 57">
+                                <div class="tag icon-bb "><img src="https://mobilelearn-static.chaoxing.com/mobilelearn/images/widget/synclassroom/ppt.png" alt="" style="width:100%;height:100%;"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 58">
+                                <div class="tag icon-bb "><img src="https://mobilelearn-static.chaoxing.com/mobilelearn/images/widget/synclassroom/teaching_plan.png" alt="" style="width:100%;height:100%;"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 60">
+                                <div class="tag icon-bb "><img src="https://mobilelearn-static.chaoxing.com/mobilelearn/images/widget/synclassroom/teaching_plan.png" alt="" style="width:100%;height:100%;"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 61">
+                                <div class="tag icon-bb " style="background: #fff"><img src="https://mobilelearn-static.chaoxing.com/mobilelearn/xinfanya/images/data/word.png" alt="" style="width:100%;height:100%;"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 62">
+                                <div class="tag icon-bb "><img src="https://mobilelearn-static.chaoxing.com/mobilelearn/images/widget/synclassroom/PDF.png" alt="" style="width:100%;height:100%;"></div>
+                            </template>
+                            <template v-else>
+                                <div class="tag icon-tp list-name-opacity"></div>
+                            </template>
+                            <ul class="list-info-operate" v-on:click="returnType != '8' ? editLibraryActive(active.activeId, active.activeType) : null">
+                                <li class="list-info">
+                                    <div class="title-name">{{active.typeTitle}}</div>
+                                    <div class="status">
+                                        <div class="time">{{timeFormate(active.createtime)}}</div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                        <!--进行中 end-->
+                        <!--未开始 begin-->
+                        <li v-for="active in groupActive.activeList0" class="list" :id="active.activeId">
+                            <input type="hidden" class="contentInput"  v-bind:value="active.content" >
+                            <input type="hidden" class="otherIdInput"  v-bind:value="active.otherId" >
+                            <input type="hidden" class="activeIdInput"  v-bind:value="active.activeId" >
+                            <input type="hidden" class="screenOpenurlInput"  v-bind:value="active.screenOpenurl" >
+                            <div class="input-box">
+                                <span class="ipt-checkbox list-input">
+                                    <input type="checkbox" name="activateName" :id="'checkbox'+active.activeId" v-bind:value="active.activeId" onclick="initSelectbox(this)"><i class="icon-checkbox"></i>
+                                </span>
+                            </div>
+                            <template v-if="active.activeType == 2">
+                                <div class="tag icon-signin list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 4">
+                                <div class="tag icon-qd list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 5">
+                                <div class="tag icon-zttl list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 50">
+                                <div class="tag icon-zttl list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 11">
+                                <div class="tag icon-xr list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 14">
+                                <div class="tag icon-wj list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 23">
+                                <div class="tag icon-pf list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 35&&active.isnorm==1&&active.isSpecialPersonalTask==0">
+                                <div class="tag icon-fzrw list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 35&&active.isnorm==1&&active.isSpecialPersonalTask==1">
+                                <div class="tag icon-fzrw_1 list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 35&&active.isnorm==0">
+                                <div class="tag icon-fzrw_1 list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 42">
+                                <div class="tag icon-cy list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 47">
+                                <div class="tag icon-jsq list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 49">
+                                <div class="tag icon-bb list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 44">
+                                <div class="tag icon-bb  list-name-opacity"><img :src="active.notStartLogo?active.notStartLogo:active.logo" alt="" style="width:100%;height:100%;"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 57">
+                                <div class="tag icon-bb "><img src="https://mobilelearn-static.chaoxing.com/mobilelearn/images/widget/synclassroom/ppt.png" alt="" style="width:100%;height:100%;"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 58">
+                                <div class="tag icon-bb"><img src="https://mobilelearn-static.chaoxing.com/mobilelearn/images/widget/synclassroom/teaching_plan.png" alt="" style="width:100%;height:100%;"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 60">
+                                <div class="tag icon-bb "><img src="https://mobilelearn-static.chaoxing.com/mobilelearn/images/widget/synclassroom/teaching_plan.png" alt="" style="width:100%;height:100%;"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 61">
+                                <div class="tag icon-bb " style="background: #fff"><img src="https://mobilelearn-static.chaoxing.com/mobilelearn/xinfanya/images/data/word.png" alt="" style="width:100%;height:100%;"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 62">
+                                <div class="tag icon-bb "><img src="https://mobilelearn-static.chaoxing.com/mobilelearn/images/widget/synclassroom/PDF.png" alt="" style="width:100%;height:100%;"></div>
+                            </template>
+                            <template v-else>
+                                <div class="tag icon-tp list-name-opacity"></div>
+                            </template>
+                            <ul class="list-info-operate" v-on:click="returnType != '8' ? editLibraryActive(active.activeId, active.activeType) : null">
+                                <li class="list-info">
+                                    <div class="title-name">{{active.typeTitle}}</div>
+                                    <div class="status">
+                                        <div class="time">{{timeFormate(active.createtime)}}</div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                        <!--未开始 end-->
+                        <!--已结束 begin-->
+                        <li v-for="active in groupActive.activeList2" class="list" :id="active.activeId">
+                            <input type="hidden" class="contentInput"  v-bind:value="active.content" >
+                            <input type="hidden" class="otherIdInput"  v-bind:value="active.otherId" >
+                            <input type="hidden" class="activeIdInput"  v-bind:value="active.activeId" >
+                            <input type="hidden" class="screenOpenurlInput"  v-bind:value="active.screenOpenurl" >
+                            <div class="input-box">
+                                <span class="ipt-checkbox list-input">
+                                    <input type="checkbox" name="activateName" :id="'checkbox'+active.activeId" v-bind:value="active.activeId" onclick="initSelectbox(this)"><i class="icon-checkbox"></i>
+                                </span>
+                            </div>
+                            <template v-if="active.activeType == 2">
+                                <div class="tag icon-signin list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 4">
+                                <div class="tag icon-qd list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 5">
+                                <div class="tag icon-zttl list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 50">
+                                <div class="tag icon-zttl list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 11">
+                                <div class="tag icon-xr list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 14">
+                                <div class="tag icon-wj list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 23">
+                                <div class="tag icon-pf list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 35&&active.isnorm==1&&active.isSpecialPersonalTask==0">
+                                <div class="tag icon-fzrw list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 35&&active.isnorm==1&&active.isSpecialPersonalTask==1">
+                                <div class="tag icon-fzrw_1 list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 35&&active.isnorm==0">
+                                <div class="tag icon-fzrw_1 list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 42">
+                                <div class="tag icon-cy list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 47">
+                                <div class="tag icon-jsq list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 49">
+                                <div class="tag icon-bb list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 44">
+                                <div class="tag icon-bb  list-name-opacity"><img :src="active.notStartLogo?active.notStartLogo:active.logo" alt="" style="width:100%;height:100%;"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 57">
+                                <div class="tag icon-bb "><img src="https://mobilelearn-static.chaoxing.com/mobilelearn/images/widget/synclassroom/ppt.png" alt="" style="width:100%;height:100%;"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 58">
+                                <div class="tag icon-bb "><img src="https://mobilelearn-static.chaoxing.com/mobilelearn/images/widget/synclassroom/teaching_plan.png" alt="" style="width:100%;height:100%;"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 60">
+                                <div class="tag icon-bb "><img src="https://mobilelearn-static.chaoxing.com/mobilelearn/images/widget/synclassroom/teaching_plan.png" alt="" style="width:100%;height:100%;"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 61">
+                                <div class="tag icon-bb" style="background: #fff"><img src="https://mobilelearn-static.chaoxing.com/mobilelearn/xinfanya/images/data/word.png" alt="" style="width:100%;height:100%;"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 62">
+                                <div class="tag icon-bb"><img src="https://mobilelearn-static.chaoxing.com/mobilelearn/images/widget/synclassroom/PDF.png" alt="" style="width:100%;height:100%;"></div>
+                            </template>
+                            <template v-else>
+                                <div class="tag icon-tp list-name-opacity"></div>
+                            </template>
+                            <ul class="list-info-operate" v-on:click="returnType != '8' ? editLibraryActive(active.activeId, active.activeType) : null">
+                                <li class="list-info">
+                                    <div class="title-name">{{active.typeTitle}}</div>
+                                    <div class="status">
+                                        <div class="time">{{timeFormate(active.createtime)}}</div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                        <!--已结束 end-->
+                    </ul>
+                </div>
+                <!-- activeListgGroupByName end-->
+            </div>
+            <div class="activate-list borderT1px" style="display:none" id="list-content-wrapper2">
+                <!-- 搜索后的list strat-->
+                <div class="group-lists-wrapper"   v-for="groupActive in searchActiveListgGroupByName" v-if="groupActive.activeList0.length>0||groupActive.activeList1.length>0||groupActive.activeList2.length>0" :planId="groupActive.id">
+                    <div class="wrapper-title" >
+                        <div class="input-box inlineMiddle" onclick="initThisGroupSelectbox(this)">
+                            <span class="ipt-checkbox list-input">
+                                    <input type="checkbox"  v-bind:value="groupActive.id"><i class="icon-checkbox"></i>
+                            </span>
+                        </div>
+                        <div class="inlineMiddle toggle-btn"  onclick="rollGroup(this)">
+                            <span class="title-name fs16 colorDeep font500" v-text="groupActive.name"></span>
+                            <span class="title-icon"></span>
+                        </div>
+                    </div>
+                    <ul class="wrapper-list">
+                        <!--进行中 begin-->
+                        <li v-for="active in groupActive.activeList1" class="list" :id="active.activeId">
+                            <input type="hidden" class="contentInput"  v-bind:value="active.content" >
+                            <input type="hidden" class="otherIdInput"  v-bind:value="active.otherId" >
+                            <input type="hidden" class="activeIdInput"  v-bind:value="active.activeId" >
+                            <input type="hidden" class="screenOpenurlInput"  v-bind:value="active.screenOpenurl" >
+                            <div class="input-box">
+                                <span class="ipt-checkbox list-input">
+                                    <input type="checkbox" name="activateName" :id="'checkbox'+active.activeId" v-bind:value="active.activeId" onclick="initSelectbox(this)"><i class="icon-checkbox"></i>
+                                </span>
+                            </div>
+                            <template v-if="active.activeType == 2">
+                                <div class="tag icon-signin list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 4">
+                                <div class="tag icon-qd list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 5">
+                                <div class="tag icon-zttl list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 50">
+                                <div class="tag icon-zttl list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 11">
+                                <div class="tag icon-xr list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 14">
+                                <div class="tag icon-wj list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 23">
+                                <div class="tag icon-pf list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 35&&active.isnorm==1&&active.isSpecialPersonalTask==0">
+                                <div class="tag icon-fzrw list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 35&&active.isnorm==1&&active.isSpecialPersonalTask==1">
+                                <div class="tag icon-fzrw_1 list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 35&&active.isnorm==0">
+                                <div class="tag icon-fzrw_1 list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 42">
+                                <div class="tag icon-cy list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 47">
+                                <div class="tag icon-jsq list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 49">
+                                <div class="tag icon-bb list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 44">
+                                <div class="tag icon-bb  list-name-opacity"><img :src="active.notStartLogo?active.notStartLogo:active.logo" alt="" style="width:100%;height:100%;"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 57">
+                                <div class="tag icon-bb "><img src="https://mobilelearn-static.chaoxing.com/mobilelearn/images/widget/synclassroom/ppt.png" alt="" style="width:100%;height:100%;"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 58">
+                                <div class="tag icon-bb "><img src="https://mobilelearn-static.chaoxing.com/mobilelearn/images/widget/synclassroom/teaching_plan.png" alt="" style="width:100%;height:100%;"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 60">
+                                <div class="tag icon-bb "><img src="https://mobilelearn-static.chaoxing.com/mobilelearn/images/widget/synclassroom/teaching_plan.png" alt="" style="width:100%;height:100%;"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 61">
+                                <div class="tag icon-bb " style="background: #fff"><img src="https://mobilelearn-static.chaoxing.com/mobilelearn/xinfanya/images/data/word.png" alt="" style="width:100%;height:100%;"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 62">
+                                <div class="tag icon-bb "><img src="https://mobilelearn-static.chaoxing.com/mobilelearn/images/widget/synclassroom/PDF.png" alt="" style="width:100%;height:100%;"></div>
+                            </template>
+                            <template v-else>
+                                <div class="tag icon-tp list-name-opacity"></div>
+                            </template>
+                            <ul class="list-info-operate" v-on:click="returnType != '8' ? editLibraryActive(active.activeId, active.activeType) : null">
+                                <li class="list-info">
+                                    <div class="title-name">{{active.typeTitle}}</div>
+                                    <div class="status">
+                                        <div class="time">{{timeFormate(active.createtime)}}</div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                        <!--进行中 end-->
+                        <!--未开始 begin-->
+                        <li v-for="active in groupActive.activeList0" class="list" :id="active.activeId">
+                            <input type="hidden" class="contentInput"  v-bind:value="active.content" >
+                            <input type="hidden" class="otherIdInput"  v-bind:value="active.otherId" >
+                            <input type="hidden" class="activeIdInput"  v-bind:value="active.activeId" >
+                            <input type="hidden" class="screenOpenurlInput"  v-bind:value="active.screenOpenurl" >
+                            <div class="input-box">
+                                <span class="ipt-checkbox list-input">
+                                    <input type="checkbox" name="activateName" :id="'checkbox'+active.activeId" v-bind:value="active.activeId" onclick="initSelectbox(this)"><i class="icon-checkbox"></i>
+                                </span>
+                            </div>
+                            <template v-if="active.activeType == 2">
+                                <div class="tag icon-signin list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 4">
+                                <div class="tag icon-qd list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 5">
+                                <div class="tag icon-zttl list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 50">
+                                <div class="tag icon-zttl list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 11">
+                                <div class="tag icon-xr list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 14">
+                                <div class="tag icon-wj list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 23">
+                                <div class="tag icon-pf list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 35&&active.isnorm==1&&active.isSpecialPersonalTask==0">
+                                <div class="tag icon-fzrw list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 35&&active.isnorm==1&&active.isSpecialPersonalTask==1">
+                                <div class="tag icon-fzrw_1 list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 35&&active.isnorm==0">
+                                <div class="tag icon-fzrw_1 list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 42">
+                                <div class="tag icon-cy list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 47">
+                                <div class="tag icon-jsq list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 49">
+                                <div class="tag icon-bb list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 44">
+                                <div class="tag icon-bb  list-name-opacity"><img :src="active.notStartLogo?active.notStartLogo:active.logo" alt="" style="width:100%;height:100%;"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 57">
+                                <div class="tag icon-bb "><img src="https://mobilelearn-static.chaoxing.com/mobilelearn/images/widget/synclassroom/ppt.png" alt="" style="width:100%;height:100%;"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 58">
+                                <div class="tag icon-bb "><img src="https://mobilelearn-static.chaoxing.com/mobilelearn/images/widget/synclassroom/teaching_plan.png" alt="" style="width:100%;height:100%;"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 60">
+                                <div class="tag icon-bb "><img src="https://mobilelearn-static.chaoxing.com/mobilelearn/images/widget/synclassroom/teaching_plan.png" alt="" style="width:100%;height:100%;"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 61">
+                                <div class="tag icon-bb" style="background: #fff"><img src="https://mobilelearn-static.chaoxing.com/mobilelearn/xinfanya/images/data/word.png" alt="" style="width:100%;height:100%;"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 62">
+                                <div class="tag icon-bb "><img src="https://mobilelearn-static.chaoxing.com/mobilelearn/images/widget/synclassroom/PDF.png" alt="" style="width:100%;height:100%;"></div>
+                            </template>
+                            <template v-else>
+                                <div class="tag icon-tp list-name-opacity"></div>
+                            </template>
+                            <ul class="list-info-operate" v-on:click="returnType != '8' ? editLibraryActive(active.activeId, active.activeType) : null">
+                                <li class="list-info">
+                                    <div class="title-name">{{active.typeTitle}}</div>
+                                    <div class="status">
+                                        <div class="time">{{timeFormate(active.createtime)}}</div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                        <!--未开始 end-->
+                        <!--已结束 begin-->
+                        <li v-for="active in groupActive.activeList2" class="list" :id="active.activeId">
+                            <input type="hidden" class="contentInput"  v-bind:value="active.content" >
+                            <input type="hidden" class="otherIdInput"  v-bind:value="active.otherId" >
+                            <input type="hidden" class="activeIdInput"  v-bind:value="active.activeId" >
+                            <input type="hidden" class="screenOpenurlInput"  v-bind:value="active.screenOpenurl" >
+                            <div class="input-box">
+                                <span class="ipt-checkbox list-input">
+                                    <input type="checkbox" name="activateName" :id="'checkbox'+active.activeId" v-bind:value="active.activeId" onclick="initSelectbox(this)"><i class="icon-checkbox"></i>
+                                </span>
+                            </div>
+                            <template v-if="active.activeType == 2">
+                                <div class="tag icon-signin list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 4">
+                                <div class="tag icon-qd list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 5">
+                                <div class="tag icon-zttl list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 50">
+                                <div class="tag icon-zttl list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 11">
+                                <div class="tag icon-xr list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 14">
+                                <div class="tag icon-wj list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 23">
+                                <div class="tag icon-pf list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 35&&active.isnorm==1&&active.isSpecialPersonalTask==0">
+                                <div class="tag icon-fzrw list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 35&&active.isnorm==1&&active.isSpecialPersonalTask==1">
+                                <div class="tag icon-fzrw_1 list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 35&&active.isnorm==0">
+                                <div class="tag icon-fzrw_1 list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 42">
+                                <div class="tag icon-cy list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 47">
+                                <div class="tag icon-jsq list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 49">
+                                <div class="tag icon-bb list-name-opacity"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 44">
+                                <div class="tag icon-bb  list-name-opacity"><img :src="active.notStartLogo?active.notStartLogo:active.logo" alt="" style="width:100%;height:100%;"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 57">
+                                <div class="tag icon-bb"><img src="https://mobilelearn-static.chaoxing.com/mobilelearn/images/widget/synclassroom/ppt.png" alt="" style="width:100%;height:100%;"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 58">
+                                <div class="tag icon-bb"><img src="https://mobilelearn-static.chaoxing.com/mobilelearn/images/widget/synclassroom/teaching_plan.png" alt="" style="width:100%;height:100%;"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 60">
+                                <div class="tag icon-bb"><img src="https://mobilelearn-static.chaoxing.com/mobilelearn/images/widget/synclassroom/teaching_plan.png" alt="" style="width:100%;height:100%;"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 61">
+                                <div class="tag icon-bb" style="background: #fff"><img src="https://mobilelearn-static.chaoxing.com/mobilelearn/xinfanya/images/data/word.png" alt="" style="width:100%;height:100%;"></div>
+                            </template>
+                            <template v-else-if="active.activeType == 62">
+                                <div class="tag icon-bb"><img src="https://mobilelearn-static.chaoxing.com/mobilelearn/images/widget/synclassroom/PDF.png" alt="" style="width:100%;height:100%;"></div>
+                            </template>
+                            <template v-else>
+                                <div class="tag icon-tp list-name-opacity"></div>
+                            </template>
+                            <ul class="list-info-operate" v-on:click="returnType != '8' ? editLibraryActive(active.activeId, active.activeType) : null">
+                                <li class="list-info">
+                                    <div class="title-name">{{active.typeTitle}}</div>
+                                    <div class="status">
+                                        <div class="time">{{timeFormate(active.createtime)}}</div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                        <!--已结束 end-->
+                    </ul>
+                </div>
+                <!-- 搜索后的list end-->
+            </div>
+            <!-- 活动列表 end -->
+            <!--加载中-->
+            <div v-if="showLoadPrompt == 1" class="loading">{{$t('language.loading')}}</div> <!--正在加载，请稍后...-->
+            <!--到底啦-->
+            <div v-if="showLoadPrompt == 2" class="list-end">{{$t('language.theEnd')}}</div> <!--已经到底了-->
+        </div>
+        <!-- 中间内容 end -->
+    </div>
+
+    <!-- 底部内容 start -->
+    <div class="footer bgwhite">
+        <ul class="footer-con">
+            <li class="fl txt fs16 colorIn">
+                <span>{{$t('language.selected2')}}</span><!--已选-->
+                <span class="colorBlue number">0</span>
+                <span>{{$t('language.fileNum')}}</span><!--个-->
+            </li>
+            <li class="fr btn">
+                <a href="#" class="jb_btn jb_btn_92_disable fr fs14" v-on:click="saveActiveByBatchFunc()">{{$t('language.save')}}</a><!--保存-->
+                <a href="#" class="jb_btn jb_btn_92 fr fs14" style="margin-right: 10px;" v-if="returnType=='8'" v-on:click="sendCloseMsg()">{{$t('language.cancel')}}</a><!--取消-->
+            </li>
+        </ul>
+    </div>
+    <!-- 底部内容 end -->
+    <!--签到-->
+    <comp-signin v-show="popSignin" :for-child-active="pptActive" :parent-name="name" ></comp-signin>
+    <!--抢答-->
+    <comp-quick-answer v-show="popQuickAnswer" :for-child-active="pptActive" :img-urls="imgUrls" :key="onloadActiveComp"></comp-quick-answer>
+    <!--投票-->
+    <comp-vote v-show="popVote" :for-child-active="pptActive" :parent-name="name" ></comp-vote>
+    <!--选人-->
+    <comp-select-person v-show="popSelectPerson" :for-child-active="pptActive" :img-urls="imgUrls"></comp-select-person>
+    <!--评分-->
+    <comp-grade v-show="popGrade" :for-child-active="pptActive" :img-urls="imgUrls" :key="onloadActiveComp"></comp-grade>
+    <!--主题讨论-->
+    <comp-discuss v-show="popDiscuss"  :active-info="pptActive" :img-urls="imgUrls"></comp-discuss>
+    <!--抽签-->
+    <comp-drawlots v-show="popDrawLots" :for-child-active="pptActive" :img-urls="imgUrls" :key="onloadActiveComp"  :parent-name="name"></comp-drawlots>
+    <!--计时器-->
+    <comp-timer v-show="popTimer" :for-child-active="pptActive" :parent-name="name" :key="onloadActiveComp"></comp-timer>
+
+    <!--白板-->
+    <comp-white-board v-show="popWhiteBoard" :for-child-active="pptActive" :key="onloadActiveComp"></comp-white-board>
+
+</div>
+<script type="text/javascript" src="https://mobilelearn-static.chaoxing.com/mobilelearn/xinfanya/js/jquery.min.js?v=1780480565513"></script>
+
+<!-- 公共头部 -->
+<script type="text/javascript" src="https://mobilelearn-static.chaoxing.com/mobilelearn/xinfanya/js/common/common-header.js?v=1780480565513"></script>
+<!-- 搜索框 -->
+<script type="text/javascript" src="https://mobilelearn-static.chaoxing.com/mobilelearn/xinfanya/js/jquery.nicescroll.min.js?v=1780480565513"></script>
+<script type="text/javascript" src="https://mobilelearn-static.chaoxing.com/mobilelearn/xinfanya/js/lib/select2/select2.full.min.js?v=1780480565513"></script>
+<script type="text/javascript" src="https://mobilelearn-static.chaoxing.com/mobilelearn/xinfanya/js/lib/select2/zh-CN.js?v=1780480565513"></script>
+<script type="text/javascript" src="https://mobilelearn-static.chaoxing.com/mobilelearn/xinfanya/js/vue.js?v=1780480565513"></script>
+<script type="text/javascript" src="https://mobilelearn-static.chaoxing.com/mobilelearn/xinfanya/js/common/sendToOtherClassPop.js?v=1780480565513"></script>
+<!--<script type="text/javascript" th:src="${serviceDomain.staticResourceDomainWithProtocol}+@{/xinfanya/js/lib/layui-v2.5.4/layui/xm-select.js(v=${_sv_})}"></script>-->
+<script type="text/javascript" src="https://mobilelearn-static.chaoxing.com/mobilelearn/xinfanya/js/axios-0.19.0.min.js"></script>
+<!-- js文件里的国际化需要的配置文件-->
+<script src="https://mobilelearn-static.chaoxing.com/mobilelearn/js/widget/jquery.i18n.properties.js?v=1780480565513" type="text/javascript"></script>
+<script src="https://mobilelearn-static.chaoxing.com/mobilelearn/js/widget/readproperties.js?v=1780480565513" type="text/javascript"></script>
+
+<!-- 页面国际化配置文件-->
+<script type="text/javascript" src="https://mobilelearn-static.chaoxing.com/mobilelearn/xinfanya/js/language/en_US.js?v=1780480565513"></script>
+<script type="text/javascript" src="https://mobilelearn-static.chaoxing.com/mobilelearn/xinfanya/js/language/zh_TW.js?v=1780480565513"></script>
+<script type="text/javascript" src="https://mobilelearn-static.chaoxing.com/mobilelearn/xinfanya/js/language/zh_CN.js?v=1780480565513"></script>
+<script type="text/javascript" src="https://mobilelearn-static.chaoxing.com/mobilelearn/xinfanya/js/language/th_TH.js?v=1780480565513"></script>
+<script type="text/javascript" src="https://mobilelearn-static.chaoxing.com/mobilelearn/xinfanya/js/language/lo_LA.js?v=1780480565513"></script>
+<script type="text/javascript" src="https://mobilelearn-static.chaoxing.com/mobilelearn/xinfanya/js/language/vue-i18n.js?v=1780480565513"></script>
+<script type="text/javascript">loadProperties();//js里的国际化需要读取旧泛雅的preoperties文件</script>
+
+<script type="text/javascript" src="https://mobilelearn-static.chaoxing.com/mobilelearn/xinfanya/js/activate/activeLibraryList.js?v=1780480565513"></script>
+<script type="text/javascript" src="https://mobilelearn-static.chaoxing.com/mobilelearn/xinfanya/js/common/select.js?v=1780480565513"></script>
+<script type="text/javascript" src="https://mobilelearn-static.chaoxing.com/mobilelearn/xinfanya/js/common/common.js?v=1780480565513"></script>
+<script type="text/javascript" src="https://mobilelearn-static.chaoxing.com/mobilelearn/xinfanya/js/lib/jquery.gesture.password.triangle.js?v=1780480565513"></script>
+<script type="text/javascript" src="https://mobilelearn-static.chaoxing.com/mobilelearn/xinfanya/js/common/moveTo.js?v=1780480565513"></script>
+<script type="text/javascript" src="https://mobilelearn-static.chaoxing.com/mobilelearn/xinfanya/js/common/pop.js?v=1780480565513"></script>
+<!--活动组件-->
+<script type="text/javascript" src="https://mobilelearn-static.chaoxing.com/mobilelearn/xinfanya/js/component/compSignin.js?v=1780480565513"></script>
+
+<script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=xYjRz7D6pjc3xV516qReaRgcTdoZTyxP&s=1"></script>
+
+
+<script type="text/javascript" src="https://mobilelearn-static.chaoxing.com/mobilelearn/xinfanya/js/component/compQuickAnswer.js?v=1780480565513"></script>
+<script type="text/javascript" src="https://mobilelearn-static.chaoxing.com/mobilelearn/xinfanya/js/component/compVote.js?v=1780480565513"></script>
+<script type="text/javascript" src="https://mobilelearn-static.chaoxing.com/mobilelearn/xinfanya/js/component/compSelectPerson.js?v=1780480565513"></script>
+<script type="text/javascript" src="https://mobilelearn-static.chaoxing.com/mobilelearn/xinfanya/js/component/compGrade.js?v=1780480565513"></script>
+<script type="text/javascript" src="https://mobilelearn-static.chaoxing.com/mobilelearn/xinfanya/js/component/compDiscuss.js?v=1780480565513"></script>
+<script type="text/javascript" src="https://mobilelearn-static.chaoxing.com/mobilelearn/xinfanya/js/component/compTimer.js?v=1780480565513"></script>
+<script type="text/javascript" src="https://mobilelearn-static.chaoxing.com/mobilelearn/xinfanya/js/component/compWhiteBoard.js?v=1780480565513"></script>
+<script type="text/javascript" src="https://mobilelearn-static.chaoxing.com/mobilelearn/xinfanya/js/component/compDrawLots.js?v=1780480565513"></script>
+<script type="text/javascript" src="https://mobilelearn-static.chaoxing.com/mobilelearn/xinfanya/js/version.js?v=1780480565513"></script>
+<script type="text/javascript" src="https://mobilelearn-static.chaoxing.com/mobilelearn/xinfanya/js/common/uplodeImg.js?v=1780480565513"></script>
+<script type="text/javascript">
+    /*<![CDATA[*/
+    document.title=$.i18n.prop("language.activityLibrary")
+    var isxxt=0
+    var messages = {
+        zh_CN: {language: zhLanguage},
+        en_US: {language: enLanguage},
+        th_TH: {language: thLanguage},
+         zh_TW: {language: zhTWLanguage},
+		lo_LA: {language: loLanguage}
+    }
+    var i18n = new VueI18n({
+        locale: languageCookieFuc("browserLocale"), // 语言标识
+        messages: messages
+    })
+    var classId = "148304228";
+    var courseId = "264381020";
+    var isPPTLibrary = null;
+    var isTeachingPlanLibrary = null;//是否是来自教案的活动库
+    var isLibrary =1;
+    var picId = null;
+    var fid = "336900";
+    var pptNumber = null;
+    var pptId = null;
+    var puid = 430580003;
+    var cpi = "519058168";
+    var courseIds = courseId;//筛选中的班级id
+    var activeType = "";//筛选中的活动type
+    var checkedActiveId  = {};//选中的活动
+    var checkedGroup  = {};//选中的分组
+    var timeType = 0;//筛选中的时间区间  1 最近三天  2 最近一周  3 最近一个月
+    var keyword = "";//搜索的关键词
+    var getLibraryActiveTime = 0;
+    var allowGetActive = 1;
+    var documentDomain = "https://"+document.domain;
+    var returnType=getUrlParam("returnType");//returnType 从哪里打开 1新泛雅课堂活动列表 2新泛雅PPT 3旧泛雅 4新泛雅课堂报告 5教案 6renwuList页面 7新泛雅基础教育指针活动列表 8任务引擎
+    if(returnType==""){
+        returnType=1;
+    }
+    if(returnType=="8"){
+        //任务引擎,设置isPPTLibrary参数为1，任务引擎打开活动库，进行批量保存时，可走PPT下活动库保存逻辑
+        isPPTLibrary=1;
+        pptNumber=1;
+        picId=0;
+    }
+    var popPage =0;
+    function getUrlParam (item) {//获取url参数
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i=0;i<vars.length;i++) {
+            var pair = vars[i].split("=");
+            if(pair[0] == item){
+                return pair[1];
+            }
+        }
+        return "";
+    }
+    var templateActive = new Vue({
+        el: '#activateBank',
+        i18n:i18n,
+        data:{
+            courseList: [],//用户所教的课程信息
+            classList:[],
+            classObj: {},	//班级详情
+            currentCourseId: courseId,//当前课程id
+            currentClassId:classId,//当前选择的班级
+            currentCourseName:"",//当前课程名称
+            currentClassName:"",//当前班级名称
+            currentActiveType:"2,4,5,11,23,35,47,14,42,43,49,44",//当前选择的活动类型
+            showLoadPrompt: 0,//0 不显示正在加载等提示语    1 正在加载提示语显示    2 已经到底了提示语显示
+            popSignin: false,
+            popQuickAnswer: false,
+            popVote: false,
+            popSelectPerson: false,
+            popGrade: false,
+            popDiscuss: false,
+            popTimer: false,
+            popWhiteBoard: false,
+            popDrawLots:false,
+            name: "templateActive",
+            pptActive:"",
+            imgUrls:"",
+            onloadActiveComp: 0,
+            activeListgGroupByName:[],
+            searchActiveListgGroupByName:[],
+            ifHasPermission:"",
+            types:"2,4,5,11,23,35,47,14,42,43,49,44",
+            templateActiveList:[],
+            searchTemplateActiveList:[],
+            isSearch: 0,
+            popPage:0,//2泛雅课堂
+            returnType: returnType,
+        },
+        created: function(){
+            var currentCourseId = getUrlParam("currentCourseId");
+            if(currentCourseId&&currentCourseId!=""){
+                this.currentCourseId = currentCourseId;
+            }
+            var currentClassId = getUrlParam("currentClassId");
+            if(currentClassId&&currentClassId!=""){
+                this.currentClassId = currentClassId;
+            }
+            // 屏蔽第四 屏蔽第五
+            // if (fid && fid == 1385) {
+            //     this.currentActiveType = "2,4,5,11,23,35,47,14,42,43,49,50,44,57,58,60,61,62";
+            //     this.types = "2,4,5,11,23,35,47,14,42,43,49,50,44,57,58,60,61,62";
+            // }
+            if(returnType == '8'){
+                //任务引擎，只有10种活动类型
+                this.currentActiveType = "2,4,5,11,14,23,35,42,43,47";
+                this.types = "2,4,5,11,14,23,35,42,43,47";
+            }
+            var currentActiveType= getUrlParam("currentActiveType");
+            if(currentActiveType&&currentActiveType!=""){
+                this.currentActiveType = currentActiveType;
+            }
+            this.getIsIsoUnit();
+            this.getClassList(this.currentCourseId,1);
+            if(isPPTLibrary!=1) {
+                this.loadActiveList()
+            }else{
+                if(!!classId&&classId!=null&&classId!=0){//ppt页面有班级
+                    this.loadActiveList()
+                }
+            }
+            //获取班级信息，如果是任务引擎打开则不执行，因为任务引擎不提供classId
+            if(returnType != '8'){
+                this.loadClassInfo();
+            }
+            this.selectGrade('#zselectGrade');
+            this.popPage= getUrlParam("popPage");
+            popPage= getUrlParam("popPage");
+            this.$nextTick(function () {
+                if(currentActiveType&&currentActiveType!=""){
+                    this.initActiveTypes(currentActiveType)
+                }
+
+            })
+
+        },
+        mounted:function(){
+            if(navigator.userAgent.indexOf("ChaoxingClassroomPc_") >= 0) {// 泛雅课堂打开
+                $('body').css('background','none');
+                $('.fixed-con').css('margin-top','0px');
+                $('.activate-bank').css('margin-top','0px');
+            }
+        },
+        methods: {
+            loadClassInfo: function(){
+                var _this=this;
+                axios.get(_CP_widget_+'/v2/apis/class/getClassDetail',{
+                    params: {
+                        fid : fid,
+                        courseId : courseId,
+                        classId : _this.currentClassId
+                    }
+                })
+                    .then(function(response){
+                        console.log(response);
+                        if(response.data.result==1){
+                            _this.classObj=response.data.data;
+                        }else{
+                            $.toast({type:"failure",content:response.data.errorMsg});
+                        }
+                    }).catch(function (error) { // 请求失败处理
+                        console.log(error);
+                        $.toast({type:"failure",content:""+$.i18n.prop("language.theSystemIsBusy")}); /*系统繁忙，请稍后再试*/
+                    }
+                );
+            },
+            getIsIsoUnit:function(){
+                var _this=this;
+                $.ajax({
+                    url: _CP_widget_+"/v2/apis/class/getIsIos?DB_STRATEGY=DEFAULT",
+                    dataType: "json",
+                    async: false,
+                    data: {"fid":fid,"courseId":courseId},
+                    success:function(res){
+                        if (res.result==1&&res.data){
+                            _this.getCourseListIsoUnit();//镜像单位获取课程，此接口不包含项目课程
+                        }else{
+                            _this.getCourseList();//非镜像单位获取课程，包含项目课程
+                        }
+                    }
+                })
+            },
+            loadActiveList: function(){
+                //取消选中的所有活动
+                $(".wrapper-title .list-input input").removeClass("active")
+                $(".wrapper-title .list-input input").prop("checked", false)
+                $(".wrapper-list .list-input input").removeClass("active")
+                $(".wrapper-list .list-input input").prop("checked", false)
+                checkedActiveId={};
+                checkedGroup  = {};
+                $("#loadingD").show();
+                var _this=this;
+                axios.get(""+'/v2/apis/active/pcActivelist',{
+                    params: {
+                        fid : fid,
+                        courseId : this.currentCourseId,
+                        classId : this.currentClassId,
+                        types: this.currentActiveType,
+                        ifHasPermission:this.ifHasPermission
+                    }
+                }).then(function(response){
+                        //$.loading.end();
+                        $("#loadingD").hide();
+                        console.log(response);
+                        if(response.data.result==1){
+                            _this.groupList=response.data.data.groupList;
+                            _this.activeListgGroupByName=[];
+                            for(j=0;j<response.data.data.groupList.length;j++){
+                                var g=response.data.data.groupList[j];
+                                _this.activeListgGroupByName.push({id:g.id,name:g.name,activeList0:[],activeList1:[],activeList2:[]});
+                            }
+                            var _activeList=response.data.data.activeList;
+                            templateActive.templateActiveList = response.data.data.activeList;
+                            if(_activeList.length==0){
+                                $(".no-activate").text($.i18n.prop("language.noActivityYet")); /*暂无活动*/
+                                $(".no-activate").show();
+                                $("#list-content-wrapper1").hide();
+                                $("#list-content-wrapper2").hide();
+                            }else{
+                                $.each(_activeList,function(idx,active){
+                                    var activeStatus=active.status;
+                                    var groupId=active.planId;
+                                    var groupActiveList=[];
+                                    $.each(_this.activeListgGroupByName,function(idx2,groupActive){
+                                        if(groupActive.id==groupId){
+                                            if(!groupActive.activeList){
+                                                groupActive.activeList=[];
+                                            }
+                                            if(activeStatus&&activeStatus==0) {
+                                                groupActive.activeList0.push(active);
+                                            }else if(activeStatus&&activeStatus==1){
+                                                groupActive.activeList1.push(active);
+                                            }else if(activeStatus&&activeStatus==2){
+                                                groupActive.activeList2.push(active);
+                                            }
+                                            return false;
+                                        }
+                                    });
+                                });
+                                $(".no-activate").hide();
+                                $("#list-content-wrapper1").show();
+                                $("#list-content-wrapper2").hide();
+                            }
+
+                            setMainHeight({
+                                target: $(".class-content"),
+                                height: 46
+                            });
+                        }else{
+                            $.toast({type:"failure",content:response.data.errorMsg});
+                        }
+                    }).catch(function (error) { // 请求失败处理
+                        //$.loading.end();
+                        $("#loadingD").hide();
+                        console.log(error);
+                        $.toast({type:"failure",content:""+$.i18n.prop("language.theSystemIsBusy")});/*系统繁忙，请稍后再试*/
+                    }
+                );
+            },
+            showMyOwnActive:function(){//仅显示自己的活动
+                if($("#activateName1").is(':checked')){
+                    templateActive.ifHasPermission=0
+                }else{
+                    templateActive.ifHasPermission=""
+                }
+                templateActive.loadActiveList()
+            },
+            searchback: function () {
+                var keyWord = $('.dataSearch_input').val()
+                console.log("keyWord"+keyWord)
+                if(keyWord==""){
+                    templateActive.searchActive()
+                }
+            },
+            searchActive: function () {//活动查询
+                var keyWord = $('.dataSearch_input').val()
+                if(keyWord != "" && keyWord.length > 0){
+                    $(".dataSearch_dele").show()
+                }else{
+                    $(".dataSearch_dele").hide()
+                }
+                $($(".ipt-radio").find("input")[0]).click();
+                if (isNull(keyWord)) {
+                    if (templateActive.isSearch == 1) {
+                        this.loadActiveList()
+                    }
+                    templateActive.isSearch = 0;
+                    return
+                }
+                templateActive.isSearch = 1;
+                var allActiveList = [];
+                var searchActiveList = [];
+                var _this = this;
+                for (var i = 0; i < _this.activeListgGroupByName.length; i++) {
+                    var list0 = _this.activeListgGroupByName[i].activeList0;
+                    allActiveList = allActiveList.concat(list0)
+
+                    var list1 = _this.activeListgGroupByName[i].activeList1;
+                    allActiveList = allActiveList.concat(list1)
+
+                    var list2 = _this.activeListgGroupByName[i].activeList2;
+                    allActiveList = allActiveList.concat(list2)
+                }
+
+                for (var i = 0; i < allActiveList.length; i++) {
+                    var activeName = allActiveList[i].typeTitle;
+                    if (!!activeName && activeName.indexOf(keyWord) > -1) {
+                        searchActiveList.push(allActiveList[i])
+                    }
+                }
+                this.dealActiveList(searchActiveList)
+            },
+            dealActiveList: function (_activeList) {
+                var _this = this;
+                _this.searchTemplateActiveList = _activeList
+                if(_activeList.length==0){
+                    $(".no-activate").show();
+                    $(".no-activate").text(''+$.i18n.prop("language.noData2"));/*暂无搜索结果 */
+                    $("#list-content-wrapper1").hide();
+                    $("#list-content-wrapper2").hide();
+                }else{
+                    _this.searchActiveListgGroupByName=[];
+                    for(j=0;j<templateActive.groupList.length;j++){
+                        var g=templateActive.groupList[j];
+                        _this.searchActiveListgGroupByName.push({id:g.id,name:g.name,activeList0:[],activeList1:[],activeList2:[]});
+                    }
+                    $.each(_activeList,function(idx,active){
+                        var activeStatus=active.status;
+                        var groupId=active.planId;
+
+                        var groupActiveList=[];
+                        $.each(_this.searchActiveListgGroupByName,function(idx2,groupActive){
+                            if(groupActive.id==groupId){
+                                if(!groupActive.activeList){
+                                    groupActive.activeList=[];
+                                }
+                                if(activeStatus&&activeStatus==0) {
+                                    groupActive.activeList0.push(active);
+                                }else if(activeStatus&&activeStatus==1){
+                                    groupActive.activeList1.push(active);
+                                }else if(activeStatus&&activeStatus==2){
+                                    groupActive.activeList2.push(active);
+                                }
+                                return false;
+                            }
+                        });
+                    });
+                    $(".no-activate").hide();
+                    $("#list-content-wrapper2").show();
+                    $("#list-content-wrapper1").hide();
+
+                    templateActive.$nextTick(function () {
+                        if (Object.keys(checkedActiveId).length != 0) {
+                            for(var p in checkedActiveId){
+                                $("#checkbox"+p).prop("checked", true);
+                                $("#checkbox"+p).addClass("active")
+                            }
+                        }
+                    })
+
+
+                }
+                setMainHeight({
+                    target: $(".class-content"),
+                    height: 46
+                });
+            },
+            getCourseList: function () {//获取用户教的课程列表，包含项目课程
+                if (this.courseList.length > 0) {
+                    return;
+                }
+                $.ajax({
+                    url: _CP_widget_+"/v2/apis/active/getProjectAndCourseList?DB_STRATEGY=DEFAULT",
+                    dataType:"json",
+                    type:"POST",
+                    async:'false',
+                    data: {"isSort":1, "courseId":courseId},
+                    success:function(data){
+                        if (data.result == 1) {
+                            templateActive.courseList = data.data.courseList;
+                            if(!!templateActive.courseList){
+                                for (var i = 0; i < templateActive.courseList.length; i++) {
+                                    if(templateActive.courseList[i].id==templateActive.currentCourseId){
+                                        templateActive.currentCourseName = templateActive.courseList[i].name
+                                    }
+                                }
+                            }
+                            templateActive.$nextTick(function () {
+                                templateActive.selectGrade('#zselectGrade1');
+                            })
+                        }
+                    }
+                });
+            },
+            getCourseListIsoUnit: function () {//获取用户教的课程列表，不包含项目课程
+                if (this.courseList.length > 0) {
+                    return;
+                }
+                $.ajax({
+                    url: ""+"/v2/apis/active/getCourseList",
+                    dataType:"json",
+                    type:"POST",
+                    async:'false',
+                    data: {"isSort":1, "courseId":courseId},
+                    success:function(data){
+                        if (data.result == 1) {
+                            templateActive.courseList = data.data.courseList;
+                            if(!!templateActive.courseList){
+                                for (var i = 0; i < templateActive.courseList.length; i++) {
+                                    if(templateActive.courseList[i].id==templateActive.currentCourseId){
+                                        templateActive.currentCourseName = templateActive.courseList[i].name
+                                    }
+                                }
+                            }
+                            templateActive.$nextTick(function () {
+                                templateActive.selectGrade('#zselectGrade1');
+                            })
+                        }
+                    }
+                });
+            },
+            getClassList: function (courseId,type) {//获取班级列表
+                var _this=this;
+                axios.get(""+'/v2/apis/class/getClassList',{
+                    params: {
+                        fid : fid,
+                        courseId : courseId
+                    }
+                }).then(function(response){
+                        console.log(response);
+                        if(response.data.result==1){
+                            templateActive.classList=response.data.data;
+                            if(!!templateActive.classList){
+                                for (var i = 0; i < templateActive.classList.length; i++) {
+                                    if(type==1){//
+                                        if(templateActive.classList[i].id==templateActive.currentClassId){
+                                            templateActive.currentClassName = templateActive.classList[i].name
+                                            templateActive.currentClassId = templateActive.classList[i].id
+                                        }
+                                        if(isPPTLibrary==1&&(!classId||classId==null||classId==0)){//ppt下活动库一开始没有班级，要先选中默认班级，再加载数据
+                                            templateActive.currentClassName = templateActive.classList[0].name
+                                            templateActive.currentClassId = templateActive.classList[0].id
+                                            templateActive.loadActiveList()
+                                        }
+                                    }else{//切换课程后，默认选中该课下第一个班级
+                                        templateActive.currentClassName = templateActive.classList[0].name
+                                        templateActive.currentClassId = templateActive.classList[0].id
+                                        $("#zselectGrade2").val("")
+                                    }
+                                }
+                            }
+                            templateActive.$nextTick(function () {
+                                templateActive.selectGrade('#zselectGrade2');
+                            })
+                        }else{
+                            $.toast({type:"failure",content:response.data.errorMsg});
+                        }
+                    }).catch(function (error) { // 请求失败处理
+                        console.log(error);
+                        $.toast({type:"failure",content:""+$.i18n.prop("language.theSystemIsBusy")}); /*系统繁忙，请稍后再试*/
+                    }
+                );
+            },
+
+            saveActice:function(activeId,activeType){//保存活动
+                if ((isPPTLibrary && isPPTLibrary == 1)||(isTeachingPlanLibrary && isTeachingPlanLibrary == 1)) {
+                    if (activeType==2) {//签到
+                        saveOrBeginSign(activeId,activeType,picId,0,null,pptId,pptNumber);
+                    }
+                    if (activeType==5) {//讨论保存
+                        saveOrBeginDiscuss(activeId,activeType,0,0);
+                    }
+                    if (activeType==4) {//抢答保存
+                        saveOrBeginAnswer(activeId,activeType,0,0);
+                    }
+                    if (activeType==11) {//选人保存
+                        saveOrBeginSelectPerson(activeId,activeType,0,0);
+                    }
+                    if (activeType==23) {//评分保存
+                        saveOrBeginGrade(activeId,activeType,0,0);
+                    }
+                    if (activeType==43) {
+                        saveOrBeginVote(activeId,activeType,picId,0,null,pptId,pptNumber,isPPTLibrary);
+                    }
+                    if (activeType==47) {
+                        saveOrBeginTimerLibrary(activeId,activeType,0,0);
+                    }
+                    if (activeType==49) {//白板保存
+                        saveOrBeginWhiteBoard(activeId,activeType,0,0);
+                    }
+                    if(activeType == 59){
+                        saveOrBeginDrawLots(activeId,activeType,0,1);
+                    }
+                } else {
+                    choosePlanPop(activeId,activeType);//非PPT和教案下保存需要选择分组
+                }
+            },
+            beginActice:function(activeId,activeType,ifSendToOtherClass){//开始活动
+                if ((!classId||classId==0)&&ifSendToOtherClass != 1){
+                    chooseClassPop(activeId,activeType);//选择班级弹框
+                    return;
+                }
+                if (activeType==2) {//签到
+                    saveOrBeginSign(activeId,activeType,picId,1,null,pptId,pptNumber);
+                }
+                if (activeType==5) {//讨论开始
+                    saveOrBeginDiscuss(activeId,activeType,0,1)
+                }
+                if (activeType==4) {//抢答开始
+                    saveOrBeginAnswer(activeId,activeType,0,1);
+                }
+                if (activeType==11) {//选人开始
+                    saveOrBeginSelectPerson(activeId,activeType,0,1);
+                }
+                if (activeType==23) {//评分开始
+                    saveOrBeginGrade(activeId,activeType,0,1);
+                }
+                if (activeType==43) {
+                    saveOrBeginVote(activeId,activeType,picId,1,null,pptId,pptNumber,isPPTLibrary);
+                }
+                if (activeType==47) {
+                    saveOrBeginTimerLibrary(activeId,activeType,0,1);
+                }
+                if (activeType==49) {//白板开始
+                    saveOrBeginWhiteBoard(activeId,activeType,0,1);
+                }
+                if(activeType == 59){
+                    saveOrBeginDrawLots(activeId,activeType,0,1);
+                }
+            },
+            choosePlanPopForSaveBtn:function () {
+                $.ajax({
+                    url: ""+"/v2/apis/active/groupPlanList",
+                    dataType:"json",
+                    async:'false',
+                    data: {"courseId":courseId,"classId":classId},
+                    success:function(data){
+                        if (data.result == 1) {
+                            var dataPlanList = data.data;
+                            var planListArray=[];
+                            if(dataPlanList&&dataPlanList.length>0){
+                                for(i=0;i<dataPlanList.length;i++){
+                                    var planJSON = {id:dataPlanList[i].id, name:dataPlanList[i].name};
+                                    if (i==0){
+                                        planJSON.default=true;
+                                    }
+                                    planListArray.push(planJSON);
+                                }
+                            }
+                            $.moveTo({
+                                title:$.i18n.prop("language.saveTo"),//保存到
+                                comfirmMove: function (groupId) {
+                                    console.log("确认保存到 id="+groupId);
+                                    templateActive.saveActiveByBatch(groupId)
+                                    },
+                                cancelMove: function () {console.log("取消移动到");},
+                                newGroups: function (groupId) {console.log("点击了新建分组");},
+                                confirmNewGroup: function (groupName,callback) {
+                                    var groupId=addActiveGroup(groupName);
+                                    if(groupId!=null){
+                                        if($.isFunction(callback)){
+                                            callback(groupId);
+                                        }
+                                    }
+                                },
+                                quitNewGroup: function () {console.log("取消新建分组");},
+                                deleteTheGroup: function (planId,dom) {
+                                    console.log("删除分组");
+                                    $.selectDialog({
+                                        content:$.i18n.prop("language.deleteGroupTip"),//"删除此分组，组下的活动会移动到未分组，确认删除？"
+                                        title:$.i18n.prop("language.prompt"),//'提示'
+                                        width:'wid440',  // 除开上面三种宽度，需要自己写样式
+                                        baseUrl:_CP_xinfanya_+'/xinfanya/',
+                                        contentDiv: '',  //自定义内容,样式直接加载容器上，内容较复杂时
+                                        sureText:$.i18n.prop("language.delete"),  //删除
+                                        cancleText:$.i18n.prop("language.cancel"),  //取消
+                                        customBtn:'',   //底部自定义按钮
+                                        zindex:15,
+                                        sureEvent:function(){
+                                            // 点击确定 回掉方法
+                                            $('.maskDiv').hide()
+                                            $.ajax({
+                                                url: _CP_survey_+"/ppt/taskAPI/deltp",
+                                                dataType:"json",
+                                                method:'POST',
+                                                data: {
+                                                    id:planId,
+                                                },
+                                                success:function(res){
+                                                    console.log(res)
+                                                    if (res.status == 1) {
+                                                        $.toast({type:"success",content:$.i18n.prop("language.operationSuccessfully")});
+                                                        dom.parents(".movie-groups").remove()
+                                                    }else{
+                                                        $.toast({type:"failure",content:res.messages});
+                                                    }
+                                                },
+                                                failed:function(error){
+                                                    console.log(error);
+                                                    $.toast({type:"failure",content:""+$.i18n.prop("language.theSystemIsBusy")}); /*系统繁忙，请稍后再试*/
+                                                }
+                                            });
+                                        },
+                                        cancleEvent:function(){
+                                            // 取消事件的回调方法
+                                            $('.maskDiv').hide()
+                                        }
+                                    });
+                                },
+                                renameTheGroup: function (planId,newName,dom) {
+                                    console.log("重命名分组");
+                                    $.ajax({
+                                        url: _CP_survey_+"/ppt/taskAPI/updatetp",
+                                        dataType:"json",
+                                        method:'POST',
+                                        data: {
+                                            id:planId,
+                                            name:newName
+                                        },
+                                        success:function(res){
+                                            console.log(res)
+                                            if (res.status == 1) {
+                                                $.toast({type:"success",content:$.i18n.prop("language.operationSuccessfully")});
+                                                $(dom).parents(".movie-groups").find(".left-part .title").text(newName)
+                                                $(dom).parents(".movie-groups").find(".group-info-edit").hide()
+                                                $(dom).parents(".movie-groups").find(".left-part .title").show()
+                                            }else{
+                                                $.toast({type:"failure",content:res.messages});
+                                            }
+                                        },
+                                        failed:function(error){
+                                            console.log(error);
+                                            $.toast({type:"failure",content:""+$.i18n.prop("language.theSystemIsBusy")}); /*系统繁忙，请稍后再试*/
+                                        }
+                                    });
+                                },
+                                groups:planListArray,
+                                addNew:true,
+                                showOperation:true,
+                            });
+                            $('.move-to-close-icon').unbind("click").on('click', function (event) {
+                                event.stopPropagation();
+                                $('.class-movie-to').fadeOut()
+                            });
+                        }
+                    }
+                });
+            },
+            saveActiveByBatchFunc: function(){
+                if ((!isPPTLibrary || isPPTLibrary != 1)&&isTeachingPlanLibrary!=1) {
+                    templateActive.choosePlanPopForSaveBtn();
+                }else{
+                    templateActive.saveActiveByBatch();
+                }
+            },
+            saveActiveByBatch: function(groupId) {//批量保存活动
+                console.log("saveActiveByBatch",groupId)
+                if (Object.keys(checkedActiveId).length == 0) {
+                    return;
+                }
+                var activeIds = "";
+                for(var p in checkedActiveId){
+                    activeIds += p;
+                    activeIds += ",";
+                }
+                if (activeIds.endsWith(",")) {
+                    activeIds = activeIds.substring(0, activeIds.length - 1);
+                }
+                $.ajax({
+                    url: ""+"/v2/apis/active/saveLibraryActive",
+                    dataType:"json",
+                    type:"POST",
+                    async:'false',
+                    data: {"activeIds":activeIds, "courseId":courseId, "classId":classId, "isPPTLibrary":isPPTLibrary, "picId":picId, "classroomPlanId":pptId,
+                        "pageNum":pptNumber,"pageId":"","checkedGroup":JSON.stringify(checkedGroup),"groupId":groupId,"isTeachingPlanLibrary":isTeachingPlanLibrary},
+                    success:function(data){
+                        if (data.result == 1) {
+                            // 当returnType为8时（从任务引擎打开），通过postMessage传递选中的活动信息给父页面
+                            if (returnType == '8') {
+                                templateActive.saveActiveForTaskEngine();
+                                //postMessage被接收后，会关闭这个页面被挂载的弹框
+                                return;
+                            }
+                            $(".wrapper-list input").removeClass("active");
+                            $(".wrapper-list input").prop("checked", false);
+                            checkedActiveId = {};
+                            if(isTeachingPlanLibrary == 1){
+                                var teachingPlanData = data.data;
+                                var messageObj={};
+                                messageObj.data=teachingPlanData;
+                                var cmd="saveBatchTask";
+                                messageObj.cmd=cmd;
+                                parent.postMessage(JSON.stringify(messageObj),'*');
+                                return;
+                            }else{
+                                templateActive.$options.methods.goBack();
+                            }
+                        }
+                    }
+                });
+            },
+            saveActiveForTaskEngine: function() {//任务引擎场景下，将选中的活动信息通过postMessage传递给父页面
+                console.log("saveActiveForTaskEngine")
+                if (Object.keys(checkedActiveId).length == 0) {
+                    $.toast({type:"warning", content: $.i18n.prop("language.pleaseSelectActivity")}); // 请先选择活动
+                    return;
+                }
+                
+                // 收集所有选中活动的详细信息
+                var selectedActivities = [];
+                var allActiveList = [];
+                
+                // 从两个列表中收集所有活动（正常列表和搜索列表）
+                for (var i = 0; i < this.activeListgGroupByName.length; i++) {
+                    allActiveList = allActiveList.concat(this.activeListgGroupByName[i].activeList0);
+                    allActiveList = allActiveList.concat(this.activeListgGroupByName[i].activeList1);
+                    allActiveList = allActiveList.concat(this.activeListgGroupByName[i].activeList2);
+                }
+                for (var i = 0; i < this.searchActiveListgGroupByName.length; i++) {
+                    allActiveList = allActiveList.concat(this.searchActiveListgGroupByName[i].activeList0);
+                    allActiveList = allActiveList.concat(this.searchActiveListgGroupByName[i].activeList1);
+                    allActiveList = allActiveList.concat(this.searchActiveListgGroupByName[i].activeList2);
+                }
+                
+                // 遍历选中的活动ID，找到对应的活动信息
+                for(var activeId in checkedActiveId) {
+                    for(var j = 0; j < allActiveList.length; j++) {
+                        if(allActiveList[j].activeId == activeId) {
+                            var active = allActiveList[j];
+                            selectedActivities.push({
+                                activeId: active.activeId,
+                                activeType: active.activeType,
+                                name: active.typeTitle || active.name || '',
+                                courseId: courseId,
+                                type: "saveActive"
+                            });
+                            break;
+                        }
+                    }
+                }
+                
+                if (selectedActivities.length == 0) {
+                    $.toast({type:"failure", content: $.i18n.prop("language.getActivityInfoFailed")}); // 获取活动信息失败
+                    return;
+                }
+                
+                // 考虑postMessage的数据长度限制，分批发送或合并发送
+                // 通常postMessage可以传输较大数据（几MB），但为了安全起见，我们检查数据大小
+                var messageData = {
+                    type: "saveActiveBatch",
+                    activities: selectedActivities,
+                    count: selectedActivities.length
+                };
+                
+                // 估算消息大小（字节）
+                var messageSize = JSON.stringify(messageData).length;
+                var maxSize = 1024 * 1024; // 1MB 限制
+                
+                if (messageSize > maxSize) {
+                    $.toast({type:"warning", content: $.i18n.prop("language.tooManyActivities")}); // 选择的活动过多，请减少选择数量
+                    console.warn("Message size exceeds limit:", messageSize, "bytes");
+                    return;
+                }
+                
+                console.log("Sending activities to parent:", messageData);
+                
+                // 发送消息给父页面
+                try {
+                    window.parent.postMessage(messageData, '*');
+                    
+                    // 清空选中状态
+                    $(".wrapper-list input").removeClass("active");
+                    $(".wrapper-list input").prop("checked", false);
+                    checkedActiveId = {};
+                    $(".footer .number").text("0");
+                    $(".footer .jb_btn").removeClass("jb_btn_92").addClass("jb_btn_92_disable");
+                    
+                    $.toast({type:"success", content: $.i18n.prop("language.sendSuccessfully")}); // 发送成功
+                    
+                } catch(e) {
+                    console.error("Failed to send message to parent:", e);
+                    $.toast({type:"failure", content: $.i18n.prop("language.sendFailed")}); // 发送失败
+                }
+            },
+            editLibraryActive: function(activeId, activeType) {//活动库活动编辑
+                // 当returnType为8时（从任务引擎打开），禁止编辑操作
+                if (returnType == '8') {
+                    return;
+                }
+                if (activeType == 2){
+                    editSignActive(activeId,2);
+                }
+                if (activeType == 4||activeType == 5||activeType == 47||activeType == 49||activeType == 11||activeType == 23||activeType == 59) {
+                    editPPTActive(activeId, activeType);
+                }
+                if (activeType == 50) {// 新版主题讨论
+                    var cxMeetingParam = "";
+                    if (templateActive.popPage == 2) {
+                        cxMeetingParam = "&showOnScreenShare=false&popPage=2"
+                    }
+                    if (isPPTLibrary && isPPTLibrary == 1) {
+                        // if(useNoteEditor==1){
+                        //     location.href=_CP_xinfanya_+'/page/renwuNew/renwuPublishSetting_new.html?classId='+classId+'&courseId='+courseId+"&activeId="+activeId+"&pptLibrary=1"+"&pptId=" + pptId+ "&pptNumber=" + pptNumber+"&picId="+picId+"&classroomPlanId="+pptId+"&pageNum="+pptNumber+"&cpi="+cpi+"&returnType="+returnType+cxMeetingParam
+                        // }else{
+                        //     location.href=_CP_xinfanya_+'/page/renwu/renwuPublishSetting.html?classId='+classId+'&courseId='+courseId+"&activeId="+activeId+"&pptLibrary=1"+"&pptId=" + pptId+ "&pptNumber=" + pptNumber+"&picId="+picId+"&classroomPlanId="+pptId+"&pageNum="+pptNumber+"&returnType="+returnType+cxMeetingParam
+                        // }
+                        location.href = _CP_xinfanya_+'/page/topicDiscuss/edit_discuss?classId='+classId+'&courseId='+courseId+"&activeId="+activeId+"&pptLibrary=1"+"&pptId="+pptId+"&pptNumber="+pptNumber+"&picId="+picId+"&classroomPlanId="+pptId+"&pageNum="+pptNumber+"&cpi="+cpi+"&returnType="+returnType+cxMeetingParam
+                    }else if(isTeachingPlanLibrary&&isTeachingPlanLibrary == 1){
+                        location.href = _CP_xinfanya_+'/page/topicDiscuss/edit_discuss?classId='+classId+'&courseId='+courseId+"&activeId="+activeId+"&isTeachingPlanLibrary=1"+"&cpi="+cpi+"&returnType="+returnType+cxMeetingParam
+                    }else {
+                        location.href = _CP_xinfanya_+'/page/topicDiscuss/edit_discuss?classId='+classId+'&courseId='+courseId+"&activeId="+activeId+"&activeLibrary=1"+"&isTeacherViewOpen=1&cpi="+cpi+"&returnType="+returnType+cxMeetingParam+"&isxxt="+isxxt;
+                    }
+                }
+                if(activeType == 14){//问卷
+                    var url = ""+"/page/questionnaire/addOrUpdateQues?courseId="+courseId+"&classId="+classId+"&activeId="+activeId+"&fid="+fid
+                        +"&uid="+puid+"&isLibrary=1"+"&returnType="+returnType+"&isxxt="+isxxt
+                    if (templateActive.popPage ==2){
+                        url =""+"/page/questionnaire/addOrUpdateQues?showOnScreenShare=false&courseId="+courseId+"&classId="+classId+"&activeId="+activeId+"&fid="+fid+"&uid="+puid+"&popPage=2&isLibrary=1";
+                    }else{
+                        if (!!isPPTLibrary && isPPTLibrary == 1) {
+                            url += ("&isPPTLibrary="+isPPTLibrary+"&pptId="+pptId+"&pageNum="+pptNumber+"&classroomPlanId="+pptId)
+                        }else if(isTeachingPlanLibrary&&isTeachingPlanLibrary == 1){
+                            url += ("&isTeachingPlanLibrary="+isTeachingPlanLibrary);
+                        }
+                    }
+                    location.href = url;
+                } if(activeType == 35){//分组任务
+                    $.ajax({
+                        url: ""+"/v2/apis/task/getActiveConfig",
+                        type: "get",
+                        dataType:"json",
+                        async:'false',
+                        data: {"activeId":activeId},
+                        success:function(obj){
+                            if(obj.result==1){
+                                var data=obj.data;
+                                var useNoteEditor=0;
+                                if(data!=null){
+                                    useNoteEditor=data.useNoteEditor;
+                                }
+                                var cxMeetingParam="";
+                                if (templateActive.popPage ==2){
+                                    cxMeetingParam="&showOnScreenShare=false&popPage=2"
+                                }
+                                if (isPPTLibrary && isPPTLibrary == 1) {
+                                    if(useNoteEditor==1){
+                                        location.href=""+'/page/renwuNew/renwuPublishSetting_new.html?classId='+classId+'&courseId='+courseId+"&activeId="+activeId+"&pptLibrary=1"+"&pptId=" + pptId+ "&pptNumber=" + pptNumber+"&picId="+picId+"&classroomPlanId="+pptId+"&pageNum="+pptNumber+"&cpi="+cpi+"&returnType="+returnType+cxMeetingParam
+                                    }else{
+                                        location.href=""+'/page/renwu/renwuPublishSetting.html?classId='+classId+'&courseId='+courseId+"&activeId="+activeId+"&pptLibrary=1"+"&pptId=" + pptId+ "&pptNumber=" + pptNumber+"&picId="+picId+"&classroomPlanId="+pptId+"&pageNum="+pptNumber+"&returnType="+returnType+cxMeetingParam
+                                    }
+                                }else if(isTeachingPlanLibrary&&isTeachingPlanLibrary == 1){
+                                    if(useNoteEditor==1){
+                                        location.href=_CP_xinfanya_+'/page/renwuNew/renwuPublishSetting_new.html?classId='+classId+'&courseId='+courseId+"&activeId="+activeId+"&isTeachingPlanLibrary=1"+"&cpi="+cpi+cxMeetingParam;
+                                    }else{
+                                        location.href=_CP_xinfanya_+'/page/renwu/renwuPublishSetting.html?classId='+classId+'&courseId='+courseId+"&activeId="+activeId+"&isTeachingPlanLibrary=1"+cxMeetingParam;
+                                    }
+                                }else{
+                                    if(useNoteEditor==1){
+                                        location.href=""+'/page/renwuNew/renwuPublishSetting_new.html?classId='+classId+'&courseId='+courseId+"&activeId="+activeId+"&activeLibrary=1&cpi="+cpi+"&returnType="+returnType+cxMeetingParam+"&isxxt="+isxxt
+                                    }else{
+                                        location.href=""+'/page/renwu/renwuPublishSetting.html?classId='+classId+'&courseId='+courseId+"&activeId="+activeId+"&activeLibrary=1"+"&returnType="+returnType+cxMeetingParam+"&isxxt="+isxxt
+                                    }
+                                }
+                            }else{
+                            }
+                        }
+                    });
+                    return false;
+                }
+                if( activeType == 42){//测验
+                    var url = ""+"/page/quiz/addOrUpdateQuiz?courseId="+courseId+"&classId="+classId+"&activeId="+activeId+"&fid="+fid+"&uid="+puid+"&isLibrary=1"+"&returnType="+returnType+"&isxxt="+isxxt
+                    if (templateActive.popPage ==2){
+                        url=""+"/page/quiz/addOrUpdateQuiz?showOnScreenShare=false&courseId="+courseId+"&classId="+classId+"&activeId="+activeId+"&fid="+fid+"&uid="+puid+"&popPage=2&isLibrary=1";
+                    }else{
+                        if (!!isPPTLibrary && isPPTLibrary == 1) {
+                            url += ("&isPPTLibrary="+isPPTLibrary+"&pptId="+pptId+"&pageNum="+pptNumber+"&classroomPlanId="+pptId)
+                        }else if(isTeachingPlanLibrary&&isTeachingPlanLibrary == 1){
+                            url +=  ("&isTeachingPlanLibrary="+isTeachingPlanLibrary);
+                        }
+                    }
+                    location.href = url;
+                }
+                if (activeType == 43) {
+                    editQuickVoteActive(activeId, activeType)
+                }
+                if (activeType == 44) {
+                    var screenOpenurlInput = $("#"+activeId).find(".screenOpenurlInput").val();
+                    window.open(screenOpenurlInput)
+                }
+
+                var content = $("#"+activeId).find(".contentInput").val();
+                var otherId = $("#"+activeId).find(".otherIdInput").val();
+                if (activeType == 57) {//课件PPT
+                    var url57=documentDomain+""+"/page/ppt/pptprepare?pptId="+otherId+"&courseId="+courseId+""+"&classId="+classId
+                    window.open(url57)
+                }
+                if (activeType == 58) {//旧版教案
+                    var url58=documentDomain+""+"/page/ppt/teachingPlanPreview?fid="+fid+"&courseId="+courseId+"&teachingPlanId="+otherId+"&hideScreenBtn=1&parentFolderId=0"
+                    window.open(url58)
+                }
+                if (activeType == 60) {//新版教案
+                    var url60=documentDomain+""+"/page/ppt/teachingplanV2?fid="+fid+"&courseId="+courseId+"&teachingPlanId="+otherId+"&parentFolderId=0"
+                    window.open(url60)
+                }
+                if (activeType == 61) {//课件word
+                    var objectId1=eval('('+content+')').pptObjectId;
+                    // var url61= ServiceDomain.cloudDomainWithProtocol+"/screen/file_"+objectId1;
+                    var url61 = ServiceDomain.mobilelearnDomainWithProtocol +"/widget/yunpan/proxyYunPanScreenFile?DB_STRATEGY=DEFAULT&objectId="+objectId1//文件的打开地址
+                    window.open(url61)
+                }
+                if (activeType == 62) {//课件pdf
+                    var objectId2=eval('('+content+')').pptObjectId;
+                    // var url62= ServiceDomain.cloudDomainWithProtocol+"/screen/file_"+objectId2;
+                    var url62 = ServiceDomain.mobilelearnDomainWithProtocol +"/widget/yunpan/proxyYunPanScreenFile?DB_STRATEGY=DEFAULT&objectId="+objectId2//文件的打开地址
+                    window.open(url62)
+                }
+            },
+            uploadImg: function(id){//上传图片
+                var formFile = new FormData();
+                var fileObj = $("#"+id).get(0).files[0];
+                var fileType = fileObj.type;
+                if(fileType!=undefined){
+                    var realType = fileType.split("/")[1];
+                    if(realType=="png"||realType=="PNG"||realType=="jpg"
+                        ||realType=="JPG"||realType=="jpeg"||realType=="JPEG"){
+                    }else{
+                        $.toast({type:"failure",content:$.i18n.prop("language.correctImageType")});/*请选择正确的图片类型文件*/
+                        return false;
+                    }
+                }
+                var maxsize = 10*1024*1024;//10M
+                var browserCfg = validBrowser();  //获取浏览器类型
+                try{
+                    var filesize = 0;
+                    if(browserCfg.isFirefox || browserCfg.isChrome ){
+                        filesize = fileObj.size;
+                        if(filesize > maxsize){
+                            $.toast({content:$.i18n.prop("language.filesLess"),type: 'warning'});//仅允许上传10M以下的文件'
+                            return false;
+                        }
+                    }
+                }catch(e){
+                    alert(e);
+                }
+                formFile.append("file",fileObj);
+                $.ajax({
+                    url : ""+"/v2/apis/active/uploadImg",//这里写你的url
+                    data: formFile,
+                    type: "Post",
+                    dataType: "json",
+                    cache: false,//上传文件无需缓存
+                    processData: false,//用于对data参数进行序列化处理 这里必须false
+                    contentType: false, //必须
+                    success: function (data) {
+                        if (data.result==1){
+                            var array= templateActive.imgUrls;
+                            if (array==null||array.length==0){
+                                array= [];
+                            }
+                            array.push(data.data.imgObjectIdList)
+                            templateActive.imgUrls =  array;
+                        }
+                    }
+                });
+            },
+            uploadImg2:function(id){//上传图片
+                var formFile = new FormData();
+                var fileObj = $("#"+id).get(0).files;
+                for (let i = 0 , filesLength = fileObj.length; i < filesLength; i++) {
+                    var fileType = fileObj[i].type;
+                    if(fileType!=undefined){
+                        var realType = fileType.split("/")[1];
+                        if(realType=="png"||realType=="PNG"||realType=="jpg"
+                            ||realType=="JPG"||realType=="jpeg"||realType=="JPEG"){
+                        }else{
+                            $.toast({type:"failure",content:$.i18n.prop("language.correctImageType")});/*请选择正确的图片类型文件*/
+                            return false;
+                        }
+                    }
+                    var maxsize = 10*1024*1024;//10M
+                    var browserCfg = validBrowser();  //获取浏览器类型
+                    try{
+                        var filesize = 0;
+                        if(browserCfg.isFirefox || browserCfg.isChrome ){
+                            filesize = fileObj[i].size;
+                            if(filesize > maxsize){
+                                $.toast({content:$.i18n.prop("language.filesLess"),type: 'warning'});//仅允许上传10M以下的文件'
+                                return false;
+                            }
+                        }
+                    }catch(e){
+                        alert(e);
+                    }
+                    formFile.append("file",fileObj[i]);
+
+                }
+                $.ajax({
+                    url : _CP_widget_+"/v2/apis/active/uploadImg",//这里写你的url
+                    data: formFile,
+                    type: "Post",
+                    dataType: "json",
+                    cache: false,//上传文件无需缓存
+                    processData: false,//用于对data参数进行序列化处理 这里必须false
+                    contentType: false, //必须
+                    success: function (data) {
+                        if (data.result==1){
+                            var array= templateActive.imgUrls;
+                            if (array==null||array.length==0){
+                                array= [];
+                            }
+                            array = [...array,...data.data.imgObjectIdList];
+                            templateActive.imgUrls =  array;
+                            if (templateActive.popDiscuss) {// 主题讨论弹窗打开时，上传图片的定时器
+                                setTimeout(function () {
+                                    $(".pop-discuss-container").getNiceScroll().resize(); // 检测滚动条是否重置大小（当窗口改变大小时）
+                                }, 500)
+                            }
+                            if (templateActive.popTopicDiscuss) {// 新版主题讨论弹窗打开时，上传图片的定时器
+                                setTimeout(function () {
+                                    $(".pop-topicDiscuss-container").getNiceScroll().resize(); // 检测滚动条是否重置大小（当窗口改变大小时）
+                                }, 500)
+                            }
+                            try{
+                                viewer.destroy();
+                            }catch (e) {
+                            }
+                        }
+                    }
+                });
+            },
+            goBack: function(){//返回上一级
+                var url = "";
+                if (isPPTLibrary && isPPTLibrary == 1) {
+                    url = ""+"/page/ppt/pptprepare?pptId=" + pptId + "&courseId=" + courseId + "&pptNumber=" + pptNumber;
+                    if (!!classId) {
+                        url += "&classId=" + classId;
+                    }
+                    if(returnType==8){//基础教育指针ppt备课页面
+                        url +="&fromtype=widgetEducation&returnType="+returnType;
+                    }
+                }else if(isTeachingPlanLibrary && isTeachingPlanLibrary == 1){//从教案中来
+                    var messageObj = {};
+                    messageObj.cmd = "taskReturn";
+                    messageObj.data = "";
+                    parent.postMessage(JSON.stringify(messageObj), '*')
+                    return;
+                } else {
+                    if(returnType==7){//基础教育指针
+                        url= "//" + ServiceDomain.ketangZhizhenDomain + "/education/teacher/teacherActiveListEducation?courseid="+courseId+"&clazzid="+classId;
+                    }else{
+                        url = ""+"/page/active/activeList?fid=" + fid +"&courseId=" + courseId + "&classId=" + classId+"&returnType="+returnType+"&isxxt="+isxxt;
+                    }
+                }
+                window.location.href = url;
+            },
+            resetSearchCriteria: function () {//重置筛选条件
+                courseIds = courseId;//筛选中的班级id
+                activeType = "";//筛选中的活动type
+                timeType = 0;//筛选中的时间区间  1 最近三天  2 最近一周  3 最近一个月
+                this.page = 1;
+            },
+            closePop: function (pop) {//关闭创建活动弹框
+                templateActive[pop] = false;
+                removeUnScroll();
+            },
+            openPath: function () {
+                if (isPPTLibrary && isPPTLibrary == 1) {
+                    return "PPT";
+                }else if(isTeachingPlanLibrary && isTeachingPlanLibrary == 1){
+                    return $.i18n.prop("language.teaching");//"教案";
+                } else {
+                    return $.i18n.prop("language.active");//"活动";
+                }
+            },
+            initActiveTypes:function(initActiveType){
+                // 屏蔽第六
+                if(initActiveType=="2,4,5,11,23,35,47,14,42,43,49,50,44"){
+                    $("#zselectGrade").val($.i18n.prop("language.all"))
+                }else if(initActiveType=="2,4,5,11,23,35,47,14,42,43,49,44"){
+                    $("#zselectGrade").val($.i18n.prop("language.all"))
+                }else if(initActiveType=="2,4,5,11,23,35,47,14,42,43"){
+                    $("#zselectGrade").val($.i18n.prop("language.all"))
+                }else if(initActiveType=="2"){
+                    $("#zselectGrade").val($.i18n.prop("language.checkin"))
+                }else if(initActiveType=="43"){
+                    $("#zselectGrade").val($.i18n.prop("language.vote"))
+                }else if(initActiveType=="11"){
+                    $("#zselectGrade").val($.i18n.prop("language.select"))
+                }else if(initActiveType=="4"){
+                    $("#zselectGrade").val($.i18n.prop("language.quickAnswer"))
+                }else if(initActiveType=="5"){
+                    $("#zselectGrade").val($.i18n.prop("language.discussion"))
+                }
+                // 屏蔽第七
+                else if (initActiveType == "50") {
+                    $("#zselectGrade").val($.i18n.prop("language.discussion"))
+                }
+                else if(initActiveType=="42"){
+                    $("#zselectGrade").val($.i18n.prop("language.inclassQuiz"))
+                }else if(initActiveType=="14"){
+                    $("#zselectGrade").val($.i18n.prop("language.survey"))
+                }else if(initActiveType=="23"){
+                    $("#zselectGrade").val($.i18n.prop("language.rate"))
+                }else if(initActiveType=="35"){
+                    $("#zselectGrade").val($.i18n.prop("language.groupTask"))
+                }else if(initActiveType=="47"){
+                    $("#zselectGrade").val($.i18n.prop("language.timer"))
+                }else if(initActiveType=="49"){
+                    $("#zselectGrade").val($.i18n.prop("language.whiteboard"))
+                }else if(initActiveType=="44"){
+                    $("#zselectGrade").val($.i18n.prop("language.resource"))
+                }
+                // else if(initActiveType=="57,61,62"){
+                //     $("#zselectGrade").val($.i18n.prop("language.resource"))
+                // }else if(initActiveType=="58,60"){
+                //     $("#zselectGrade").val($.i18n.prop("language.teaching"))
+                // }
+                this.currentActiveType=initActiveType//当前选择活动类型
+            },
+            timeFormate: function (time) {//时间格式
+                if (!time) {
+                    return '-';
+                }
+                // time = time.replace(new RegExp("-","gm"),"/");
+                var date = new Date(time);
+                return date.toLocaleString();
+            },
+            selectGrade:function (id) {
+                var array = []
+                if(id=="#zselectGrade1"){
+                    var coursearray = templateActive.courseList;
+                    for (var i = 0; i < coursearray.length; i++) {
+                        var obj = {"id":i+1,"courseId":coursearray[i].id,"texts": coursearray[i].name,"type":"#zselectGrade1"}
+                        array.push(obj)
+                    }
+                }else if(id=="#zselectGrade2"){
+                    var classarray = templateActive.classList;
+                    var obj3 = {"id":1,"classId":0,"texts": $.i18n.prop("language.all"),"type":"#zselectGrade2"}//全部
+                    if (fid != 1731){
+                        //华科屏蔽
+                        array.push(obj3)
+                    }
+                    for (var j = 0; j < classarray.length; j++) {
+                        var obj2 = {"id":j+2,"classId":classarray[j].id,"texts": classarray[j].name,"type":"#zselectGrade2"}
+                        array.push(obj2)
+                    }
+                }else if(id=="#zselectGrade"){
+                    // if (fid && fid == 1385) {
+                    //     array=[
+                    //         // 屏蔽第三
+                    //         // {"id":14,"activeType":"2,4,5,11,23,35,47,14,42,43,49,44,57,58,60,61,62","texts":$.i18n.prop("language.all"),"type":"#zselectGrade"},//全部
+                    //         {"id":14,"activeType":"2,4,5,11,23,35,47,14,42,43,49,50,44,57,58,60,61,62","texts":$.i18n.prop("language.all"),"type":"#zselectGrade"},//全部
+                    //         {"id":0,"activeType":2,"texts":$.i18n.prop("language.checkin"),"type":"#zselectGrade"},//签到
+                    //         {"id":1,"activeType":43,"texts":$.i18n.prop("language.vote"),"type":"#zselectGrade"},//投票
+                    //         {"id":2,"activeType":11,"texts": $.i18n.prop("language.select"),"type":"#zselectGrade"},//选人
+                    //         {"id":3,"activeType":4,"texts": $.i18n.prop("language.quickAnswer"),"type":"#zselectGrade"},//抢答
+                    //         {"id":4,"activeType":5,"texts": $.i18n.prop("language.discussion"),"type":"#zselectGrade"},//主题讨论
+                    //         // 屏蔽第八
+                    //         {"id": 15, "activeType": 50, "texts": $.i18n.prop("language.discussion"), "type": "#zselectGrade"},// 主题讨论
+                    //         {"id":5,"activeType":42,"texts": $.i18n.prop("language.inclassQuiz"),"type":"#zselectGrade"},//随堂练习
+                    //         {"id":6,"activeType":14,"texts": $.i18n.prop("language.survey"),"type":"#zselectGrade"},//问卷
+                    //         {"id":7,"activeType":23,"texts":$.i18n.prop("language.rate"),"type":"#zselectGrade"},//评分
+                    //         {"id":8,"activeType":35,"texts": $.i18n.prop("language.groupTask"),"type":"#zselectGrade"},//分组任务
+                    //         {"id":9,"activeType":47,"texts": $.i18n.prop("language.timer"),"type":"#zselectGrade"},// 计时器
+                    //         {"id":10,"activeType":49,"texts": $.i18n.prop("language.whiteboard"),"type":"#zselectGrade"},//白板
+                    //         {"id":11,"activeType":44,"texts": $.i18n.prop("language.resource"),"type":"#zselectGrade"},//资料
+                    //         {"id":12,"activeType":"57,61,62","texts": $.i18n.prop("language.courseware"),"type":"#zselectGrade"},//课件
+                    //         {"id":13,"activeType":"58,60","texts": $.i18n.prop("language.teaching"),"type":"#zselectGrade"},//教案
+                    //     ]
+                    // }
+                    if(isTeachingPlanLibrary&&isTeachingPlanLibrary==1){
+                        array=[
+                            {"id":14,"activeType":"2,4,5,11,23,35,47,14,42,43","texts":$.i18n.prop("language.all"),"type":"#zselectGrade"},//全部
+                            {"id":0,"activeType":2,"texts":$.i18n.prop("language.checkin"),"type":"#zselectGrade"},//签到
+                            {"id":1,"activeType":43,"texts":$.i18n.prop("language.vote"),"type":"#zselectGrade"},//投票
+                            {"id":2,"activeType":11,"texts": $.i18n.prop("language.select"),"type":"#zselectGrade"},//选人
+                            {"id":3,"activeType":4,"texts": $.i18n.prop("language.quickAnswer"),"type":"#zselectGrade"},//抢答
+                            {"id":4,"activeType":5,"texts": $.i18n.prop("language.discussion"),"type":"#zselectGrade"},//主题讨论
+                            {"id":5,"activeType":42,"texts": $.i18n.prop("language.inclassQuiz"),"type":"#zselectGrade"},//随堂练习
+                            {"id":6,"activeType":14,"texts": $.i18n.prop("language.survey"),"type":"#zselectGrade"},//问卷
+                            {"id":7,"activeType":23,"texts":$.i18n.prop("language.rate"),"type":"#zselectGrade"},//评分
+                            {"id":8,"activeType":35,"texts": $.i18n.prop("language.groupTask"),"type":"#zselectGrade"},//分组任务
+                            {"id":9,"activeType":47,"texts": $.i18n.prop("language.timer"),"type":"#zselectGrade"},// 计时器
+                        ]
+                    }else if(returnType == '8'){
+                        //任务引擎只有10种活动类型--2026年5月14日
+                        array=[
+                            {"id":14,"activeType":"2,4,5,11,23,35,47,14,42,43","texts":$.i18n.prop("language.all"),"type":"#zselectGrade"},//全部
+                            {"id":0,"activeType":2,"texts":$.i18n.prop("language.checkin"),"type":"#zselectGrade"},//签到
+                            {"id":1,"activeType":43,"texts":$.i18n.prop("language.vote"),"type":"#zselectGrade"},//投票
+                            {"id":2,"activeType":11,"texts": $.i18n.prop("language.select"),"type":"#zselectGrade"},//选人
+                            {"id":3,"activeType":4,"texts": $.i18n.prop("language.quickAnswer"),"type":"#zselectGrade"},//抢答
+                            {"id":4,"activeType":5,"texts": $.i18n.prop("language.discussion"),"type":"#zselectGrade"},//主题讨论
+                            {"id":5,"activeType":42,"texts": $.i18n.prop("language.inclassQuiz"),"type":"#zselectGrade"},//随堂练习
+                            {"id":6,"activeType":14,"texts": $.i18n.prop("language.survey"),"type":"#zselectGrade"},//问卷
+                            {"id":7,"activeType":23,"texts":$.i18n.prop("language.rate"),"type":"#zselectGrade"},//评分
+                            {"id":8,"activeType":35,"texts": $.i18n.prop("language.groupTask"),"type":"#zselectGrade"},//分组任务
+                            {"id":9,"activeType":47,"texts": $.i18n.prop("language.timer"),"type":"#zselectGrade"},// 计时器
+                        ]
+                    }else {
+                        array=[
+                            {"id":14,"activeType":"2,4,5,11,23,35,47,14,42,43,49,44","texts":$.i18n.prop("language.all"),"type":"#zselectGrade"},//全部
+                            {"id":0,"activeType":2,"texts":$.i18n.prop("language.checkin"),"type":"#zselectGrade"},//签到
+                            {"id":1,"activeType":43,"texts":$.i18n.prop("language.vote"),"type":"#zselectGrade"},//投票
+                            {"id":2,"activeType":11,"texts": $.i18n.prop("language.select"),"type":"#zselectGrade"},//选人
+                            {"id":3,"activeType":4,"texts": $.i18n.prop("language.quickAnswer"),"type":"#zselectGrade"},//抢答
+                            {"id":4,"activeType":5,"texts": $.i18n.prop("language.discussion"),"type":"#zselectGrade"},//主题讨论
+                            {"id":5,"activeType":42,"texts": $.i18n.prop("language.inclassQuiz"),"type":"#zselectGrade"},//随堂练习
+                            {"id":6,"activeType":14,"texts": $.i18n.prop("language.survey"),"type":"#zselectGrade"},//问卷
+                            {"id":7,"activeType":23,"texts":$.i18n.prop("language.rate"),"type":"#zselectGrade"},//评分
+                            {"id":8,"activeType":35,"texts": $.i18n.prop("language.groupTask"),"type":"#zselectGrade"},//分组任务
+                            {"id":9,"activeType":47,"texts": $.i18n.prop("language.timer"),"type":"#zselectGrade"},// 计时器
+                            {"id":10,"activeType":49,"texts": $.i18n.prop("language.whiteboard"),"type":"#zselectGrade"},//白板
+                            {"id":11,"activeType":44,"texts": $.i18n.prop("language.resource"),"type":"#zselectGrade"},//资料
+                            // {"id":12,"activeType":"57,61,62","texts": $.i18n.prop("language.courseware"),"type":"#zselectGrade"},//课件
+                            // {"id":13,"activeType":"58,60","texts": $.i18n.prop("language.teaching"),"type":"#zselectGrade"},//教案
+                        ]   
+                    }
+                }
+
+
+                // electThisActiveType(44)"><div class="overHidden2">{{$t('language.resource')}}</div></li><!--资料-->
+                // <li class="type-list overHidden2" id="activeType57" v-on:click="selectThisActiveType(57,61,62)"><div class="overHidden2">{{$t('language.courseware')}}</div></li><!--课件-->
+                // <li class="type-list overHidden2" id="activeType58" v-on:click="selectThisActiveType(58,60)"><div class="overHidden2">{{$t('language.teaching')}}</div></li><!--教案-->
+                $.zSelect({
+                    ele: id,
+                    hasSearch: false,
+                    text: 'texts',
+                    maxheight: 260,
+                    hasSearchMin: 1, //数量超过5条才显示搜索框
+                    data: array,
+                    selected: function (data) {
+                        console.log(data)
+                        var json = eval(data)
+                        if(json.type=="#zselectGrade1"){
+                            templateActive.getClassList(json.courseId,2)
+                            templateActive.currentCourseId=json.courseId//课程选择框里显示的课程id
+                            if(!!templateActive.courseList){
+                                for (var i = 0; i < templateActive.courseList.length; i++) {
+                                    if(templateActive.courseList[i].id==templateActive.currentCourseId){
+                                        templateActive.currentCourseName = templateActive.courseList[i].name
+                                    }
+                                }
+                            }
+                        }else if(json.type=="#zselectGrade2"){
+                            if(json.classId==0){
+                                var url = ""+"/page/active/activeLibraryList2?courseId=" + courseId + "&classId=" + classId + "&fid=" + fid+"&returnType="+returnType +"&isxxt="+isxxt+"&cpi="+cpi;
+                                if (!!isPPTLibrary && isPPTLibrary == 1) {
+                                    url += ( "&pptId=" + pptId + "&pptNumber=" + pptNumber + "&isPPTLibrary=" + isPPTLibrary + "&picId=" + picId);
+                                }
+                                if (!!isTeachingPlanLibrary && isTeachingPlanLibrary == 1) {
+                                    url += ( "&isTeachingPlanLibrary=" + isTeachingPlanLibrary);
+                                }
+                                if(!!templateActive.currentCourseId){
+                                    url+="&currentCourseId="+templateActive.currentCourseId;
+                                }
+                                url+="&popPage="+templateActive.popPage;
+                                if(!!templateActive.currentActiveType){
+                                    url+="&currentActiveType="+templateActive.currentActiveType;
+                                }
+                                url+="&popPage="+templateActive.popPage;
+                                window.location.href = url
+                                return;
+                            }
+                            templateActive.currentClassId=json.classId//当前班级id
+                        }else if(json.type=="#zselectGrade"){
+                            templateActive.currentActiveType=json.activeType//当前选择活动类型
+
+                        }
+                    }
+                })
+            },
+            showHistory:function(activeType){//展示活动最近一次的设置
+                var activeName = $("#gradeTitle").val()
+                var activeId = templateActive.pptActive.id
+                $.ajax({
+                    url: _CP_widget_+"/v2/apis/active/getPPTActiveHistory?activeType="+activeType+"&classId="+classId+"&puid="+puid+"&courseId="+courseId+"&DB_STRATEGY=COURSEID&STRATEGY_PARA=courseId",
+                    dataType:"json",
+                    async:'false',
+                    cache:false,
+                    success:function(data){
+                        if (data.result == 1) {
+                            var pptActive = data.data;
+                            templateActive.pptActive = pptActive;
+                            templateActive.pptActive.name = activeName;
+                            templateActive.pptActive.id = activeId;
+                            if (activeType==23) {//评分渲染页面
+                                $('.activate-dialog').fadeOut();
+                                templateActive.popGrade = true;
+                                // unScroll();
+                                setTimeout(function (){
+                                    if(!$("#set-title").hasClass("open")) {//判断是否展开了设置页
+                                        document.getElementById("set-title").click();//展开设置页
+                                    }
+                                },0)
+
+                            }
+                        }
+                    }
+                });
+            },
+            hadHistory:function (activeType){
+                $.ajax({
+                    url: _CP_widget_+"/v2/apis/active/getPPTActiveHistory?activeType="+activeType+"&classId="+classId+"&puid="+puid+"&courseId="+courseId+"&DB_STRATEGY=COURSEID&STRATEGY_PARA=courseId",
+                    dataType:"json",
+                    async:'false',
+                    cache:false,
+                    success:function(data){
+                        if (data.data==null){
+                            $(".btn-use").hide()
+                        }
+                    }
+                })
+            },
+            sendCloseMsg:function (){
+                if (returnType == '8'){
+                    window.parent.postMessage({"type":"closeActivePop"},'*');
+                }
+            },
+        },
+        filters: {
+
+        }
+    });
+
+    //毫秒转换为时间
+    Date.prototype.toLocaleString = function() {
+        // 补0   例如 2018/7/10 14:7:2  补完后为 2018/07/10 14:07:02
+        function addZero(num) {
+            if(num<10)
+                return "0" + num;
+            return num;
+        }
+        // 按自定义拼接格式返回
+        var ifShowYear = this.getFullYear() + "-";
+        if (new Date().getFullYear()==this.getFullYear()) {//本年的活动不显示年份
+            ifShowYear="";
+        }
+        return ifShowYear+ addZero(this.getMonth() + 1) + "-" + addZero(this.getDate()) + " " +
+            addZero(this.getHours()) + ":" + addZero(this.getMinutes()) ;
+    };
+    var comomonVue = templateActive;//定义一个公共的vue变量用于各自的组件获取数据
+    function initSelectbox(obj) {
+        /* 活动列表点击事件 */
+        if ($(obj).hasClass("active")) {
+            $(obj).removeClass("active");
+            $(obj).find(".list-input input").prop("checked", false);
+            var value1 = $(obj).attr("value")
+            delete checkedActiveId[value1];
+        } else {
+            $(obj).addClass("active");
+            $(obj).find(".list-input input").prop("checked", true);
+            var value2 = $(obj).attr("value")
+            checkedActiveId[value2] = value2;
+        }
+        /* 选中个数赋值 */
+        var len = $('input[name="activateName"]:checked').length;
+        $(".footer .number").text(len);
+        if (len > 0) {
+            $(".footer .jb_btn").removeClass("jb_btn_92_disable").addClass("jb_btn_92");
+        } else {
+            $(".footer .jb_btn").removeClass("jb_btn_92").addClass("jb_btn_92_disable");
+        }
+    }
+
+    function initThisGroupSelectbox(obj) {//选中或取消本组的全部活动
+        /* 活动列表点击事件 */
+        if ($(obj).parent().hasClass("active")) {
+            $(obj).parent().removeClass("active");
+            $(obj).parent().find(".list-input input").prop("checked", false);
+
+            $(obj).parent().parent().find(".wrapper-list .list-input input").removeClass("active")
+            $(obj).parent().parent().find(".wrapper-list .list-input input").prop("checked", false)
+            var allSelected3 = $(obj).parent().parent().find(".wrapper-list .list")
+            var selectedLength3 = $(obj).parent().parent().find(".wrapper-list .list").length
+            for (var k = 0; k <selectedLength3 ; k++) {
+                var value3 = allSelected3.eq(k).find(".list-input input").attr("value")
+                delete checkedActiveId[value3] ;
+            }
+            var groupValue3 = $(obj).parent().find(".list-input input").attr("value");
+            delete checkedGroup[groupValue3];
+        } else {
+            $(obj).parent().addClass("active");
+            $(obj).parent().find(".list-input input").prop("checked", true);
+
+            $(obj).parent().parent().find(".wrapper-list .list-input input").addClass("active")
+            $(obj).parent().parent().find(".wrapper-list .list-input input").prop("checked", true)
+            var allSelected2 = $(obj).parent().parent().find(".wrapper-list .list")
+            var selectedLength2 = $(obj).parent().parent().find(".wrapper-list .list").length
+            for (var j = 0; j <selectedLength2 ; j++) {
+                var value2 = allSelected2.eq(j).find(".list-input input").attr("value")
+                checkedActiveId[value2] = value2;
+            }
+            var groupValue2 = $(obj).parent().find(".list-input input").attr("value");
+            var groupName2 = $(obj).parent().find(".title-name").text()
+            checkedGroup[groupValue2]=groupName2;
+        }
+        /* 选中个数赋值 */
+        var len = $('input[name="activateName"]:checked').length;
+        $(".footer .number").text(len);
+        if (len > 0) {
+            $(".footer .jb_btn").removeClass("jb_btn_92_disable").addClass("jb_btn_92");
+        } else {
+            $(".footer .jb_btn").removeClass("jb_btn_92").addClass("jb_btn_92_disable");
+        }
+    }
+    //获取浏览器类型
+    function validBrowser(){
+        var browserCfg = {};
+        var u_agent = navigator.userAgent;
+        browserCfg.name = 'Failed to identify the browser';
+        if(u_agent.indexOf('Firefox') > -1){
+            browserCfg.name = 'Firefox';
+            browserCfg.isFirefox = true;
+        }else if(u_agent.indexOf('Chrome') > -1){
+            browserCfg.name = 'Chrome';
+            browserCfg.isChrome = true;
+        }else if(u_agent.indexOf('Trident') > -1 && u_agent.indexOf('rv:11') > -1){
+            browserCfg.name = 'IE11';
+            browserCfg.isIE = true;
+        }else if(u_agent.indexOf('MSIE') > -1 && u_agent.indexOf('Trident') > -1){
+            browserCfg.name = 'IE(8-10)';
+            browserCfg.isIE = true;
+        }else if(u_agent.indexOf('MSIE') > -1){
+            browserCfg.name = 'IE(6-7)';
+            browserCfg.isIE = true;
+        }else if(u_agent.indexOf('Opera') > -1){
+            browserCfg.name = 'Opera';
+        }else{
+            browserCfg.name += ',info:' + u_agent;
+        }
+        return browserCfg;
+    }
+
+    /* ]]> */
+</script>
+<script type="text/javascript">
+/*<![CDATA[*/
+    function isNull( str ){
+        if ( str == "" ) return true;
+        if ( str == null ) return true;
+        var regu = "^[ ]+$";
+        var re = new RegExp(regu);
+        return re.test(str);
+    }
+
+    $('body').on('click', '.mui-switch', function () {
+        if($(this).hasClass('checked')){
+            $(this).removeClass('checked')
+            $(this).find(":checkbox").prop("checked", false);
+        }else{
+            $(this).addClass('checked')
+            $(this).find(":checkbox").prop("checked", true);
+        }
+    })
+    // 点击列表icon 加载列表
+    function rollGroup(obj){
+        var parent = $(obj).parents('.wrapper-title');
+        if ($(parent).siblings('.wrapper-list').is(':hidden')) {
+            $(parent).find('.title-icon').css({'transform': 'rotateZ(0)'})
+            $(parent).siblings('.wrapper-list').slideDown()
+        } else {
+            $(parent).find('.title-icon').css({'transform': 'rotateZ(180deg)'})
+            $(parent).siblings('.wrapper-list').slideUp()
+        }
+    }
+    $("#searchActiveInput").keydown(function(e) {
+        if (e.keyCode == 13) {
+            templateActive.searchActive();
+        }
+    });
+    /* ]]> */
+</script>
+</body>
+</html>

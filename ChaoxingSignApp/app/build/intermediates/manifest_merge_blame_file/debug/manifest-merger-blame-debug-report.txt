@@ -1,0 +1,187 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.chaoxing.sign"
+4    android:versionCode="1"
+5    android:versionName="1.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="26"
+9        android:targetSdkVersion="34" />
+10
+11    <!-- 网络 -->
+12    <uses-permission android:name="android.permission.INTERNET" />
+12-->C:\Users\win\Desktop\学习通签到\ChaoxingSignApp\app\src\main\AndroidManifest.xml:5:5-67
+12-->C:\Users\win\Desktop\学习通签到\ChaoxingSignApp\app\src\main\AndroidManifest.xml:5:22-64
+13    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+13-->C:\Users\win\Desktop\学习通签到\ChaoxingSignApp\app\src\main\AndroidManifest.xml:6:5-79
+13-->C:\Users\win\Desktop\学习通签到\ChaoxingSignApp\app\src\main\AndroidManifest.xml:6:22-76
+14
+15    <!-- 位置 -->
+16    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+16-->C:\Users\win\Desktop\学习通签到\ChaoxingSignApp\app\src\main\AndroidManifest.xml:9:5-79
+16-->C:\Users\win\Desktop\学习通签到\ChaoxingSignApp\app\src\main\AndroidManifest.xml:9:22-76
+17    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+17-->C:\Users\win\Desktop\学习通签到\ChaoxingSignApp\app\src\main\AndroidManifest.xml:10:5-81
+17-->C:\Users\win\Desktop\学习通签到\ChaoxingSignApp\app\src\main\AndroidManifest.xml:10:22-78
+18
+19    <!-- 相机 -->
+20    <uses-permission android:name="android.permission.CAMERA" />
+20-->C:\Users\win\Desktop\学习通签到\ChaoxingSignApp\app\src\main\AndroidManifest.xml:13:5-65
+20-->C:\Users\win\Desktop\学习通签到\ChaoxingSignApp\app\src\main\AndroidManifest.xml:13:22-62
+21
+22    <!-- 存储 -->
+23    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+23-->C:\Users\win\Desktop\学习通签到\ChaoxingSignApp\app\src\main\AndroidManifest.xml:16:5-80
+23-->C:\Users\win\Desktop\学习通签到\ChaoxingSignApp\app\src\main\AndroidManifest.xml:16:22-77
+24    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+24-->C:\Users\win\Desktop\学习通签到\ChaoxingSignApp\app\src\main\AndroidManifest.xml:17:5-81
+24-->C:\Users\win\Desktop\学习通签到\ChaoxingSignApp\app\src\main\AndroidManifest.xml:17:22-78
+25
+26    <permission
+26-->[androidx.core:core:1.12.0] C:\Users\win\.gradle\caches\8.13\transforms\3ef2366ffa67c9d7574cbca9b174e52b\transformed\core-1.12.0\AndroidManifest.xml:22:5-24:47
+27        android:name="com.chaoxing.sign.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+27-->[androidx.core:core:1.12.0] C:\Users\win\.gradle\caches\8.13\transforms\3ef2366ffa67c9d7574cbca9b174e52b\transformed\core-1.12.0\AndroidManifest.xml:23:9-81
+28        android:protectionLevel="signature" />
+28-->[androidx.core:core:1.12.0] C:\Users\win\.gradle\caches\8.13\transforms\3ef2366ffa67c9d7574cbca9b174e52b\transformed\core-1.12.0\AndroidManifest.xml:24:9-44
+29
+30    <uses-permission android:name="com.chaoxing.sign.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+30-->[androidx.core:core:1.12.0] C:\Users\win\.gradle\caches\8.13\transforms\3ef2366ffa67c9d7574cbca9b174e52b\transformed\core-1.12.0\AndroidManifest.xml:26:5-97
+30-->[androidx.core:core:1.12.0] C:\Users\win\.gradle\caches\8.13\transforms\3ef2366ffa67c9d7574cbca9b174e52b\transformed\core-1.12.0\AndroidManifest.xml:26:22-94
+31
+32    <application
+32-->C:\Users\win\Desktop\学习通签到\ChaoxingSignApp\app\src\main\AndroidManifest.xml:19:5-56:19
+33        android:allowBackup="true"
+33-->C:\Users\win\Desktop\学习通签到\ChaoxingSignApp\app\src\main\AndroidManifest.xml:20:9-35
+34        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+34-->[androidx.core:core:1.12.0] C:\Users\win\.gradle\caches\8.13\transforms\3ef2366ffa67c9d7574cbca9b174e52b\transformed\core-1.12.0\AndroidManifest.xml:28:18-86
+35        android:debuggable="true"
+36        android:extractNativeLibs="false"
+37        android:icon="@mipmap/ic_launcher"
+37-->C:\Users\win\Desktop\学习通签到\ChaoxingSignApp\app\src\main\AndroidManifest.xml:21:9-43
+38        android:label="学习通签到"
+38-->C:\Users\win\Desktop\学习通签到\ChaoxingSignApp\app\src\main\AndroidManifest.xml:22:9-30
+39        android:networkSecurityConfig="@xml/network_security_config"
+39-->C:\Users\win\Desktop\学习通签到\ChaoxingSignApp\app\src\main\AndroidManifest.xml:25:9-69
+40        android:supportsRtl="true"
+40-->C:\Users\win\Desktop\学习通签到\ChaoxingSignApp\app\src\main\AndroidManifest.xml:23:9-35
+41        android:theme="@style/Theme.AppCompat.Light.NoActionBar" >
+41-->C:\Users\win\Desktop\学习通签到\ChaoxingSignApp\app\src\main\AndroidManifest.xml:24:9-65
+42
+43        <!-- 高德地图 API Key -->
+44        <meta-data
+44-->C:\Users\win\Desktop\学习通签到\ChaoxingSignApp\app\src\main\AndroidManifest.xml:28:9-30:64
+45            android:name="com.amap.api.v2.apikey"
+45-->C:\Users\win\Desktop\学习通签到\ChaoxingSignApp\app\src\main\AndroidManifest.xml:29:13-50
+46            android:value="77cdf6c640a93dcd29e57ff4017f73d7" />
+46-->C:\Users\win\Desktop\学习通签到\ChaoxingSignApp\app\src\main\AndroidManifest.xml:30:13-61
+47
+48        <!-- 主入口 -->
+49        <activity
+49-->C:\Users\win\Desktop\学习通签到\ChaoxingSignApp\app\src\main\AndroidManifest.xml:33:9-40:20
+50            android:name="com.chaoxing.sign.MainActivity"
+50-->C:\Users\win\Desktop\学习通签到\ChaoxingSignApp\app\src\main\AndroidManifest.xml:34:13-41
+51            android:exported="true" >
+51-->C:\Users\win\Desktop\学习通签到\ChaoxingSignApp\app\src\main\AndroidManifest.xml:35:13-36
+52            <intent-filter>
+52-->C:\Users\win\Desktop\学习通签到\ChaoxingSignApp\app\src\main\AndroidManifest.xml:36:13-39:29
+53                <action android:name="android.intent.action.MAIN" />
+53-->C:\Users\win\Desktop\学习通签到\ChaoxingSignApp\app\src\main\AndroidManifest.xml:37:17-69
+53-->C:\Users\win\Desktop\学习通签到\ChaoxingSignApp\app\src\main\AndroidManifest.xml:37:25-66
+54
+55                <category android:name="android.intent.category.LAUNCHER" />
+55-->C:\Users\win\Desktop\学习通签到\ChaoxingSignApp\app\src\main\AndroidManifest.xml:38:17-77
+55-->C:\Users\win\Desktop\学习通签到\ChaoxingSignApp\app\src\main\AndroidManifest.xml:38:27-74
+56            </intent-filter>
+57        </activity>
+58
+59        <!-- 登录页 -->
+60        <activity
+60-->C:\Users\win\Desktop\学习通签到\ChaoxingSignApp\app\src\main\AndroidManifest.xml:43:9-45:55
+61            android:name="com.chaoxing.sign.activity.LoginActivity"
+61-->C:\Users\win\Desktop\学习通签到\ChaoxingSignApp\app\src\main\AndroidManifest.xml:44:13-51
+62            android:windowSoftInputMode="adjustPan" />
+62-->C:\Users\win\Desktop\学习通签到\ChaoxingSignApp\app\src\main\AndroidManifest.xml:45:13-52
+63
+64        <!-- 首页 -->
+65        <activity android:name="com.chaoxing.sign.activity.HomeActivity" />
+65-->C:\Users\win\Desktop\学习通签到\ChaoxingSignApp\app\src\main\AndroidManifest.xml:48:9-59
+65-->C:\Users\win\Desktop\学习通签到\ChaoxingSignApp\app\src\main\AndroidManifest.xml:48:19-56
+66
+67        <!-- 签到页 -->
+68        <activity android:name="com.chaoxing.sign.activity.SignActivity" />
+68-->C:\Users\win\Desktop\学习通签到\ChaoxingSignApp\app\src\main\AndroidManifest.xml:51:9-59
+68-->C:\Users\win\Desktop\学习通签到\ChaoxingSignApp\app\src\main\AndroidManifest.xml:51:19-56
+69
+70        <!-- 位置签到页 -->
+71        <activity android:name="com.chaoxing.sign.activity.LocationSignActivity" />
+71-->C:\Users\win\Desktop\学习通签到\ChaoxingSignApp\app\src\main\AndroidManifest.xml:54:9-67
+71-->C:\Users\win\Desktop\学习通签到\ChaoxingSignApp\app\src\main\AndroidManifest.xml:54:19-64
+72
+73        <provider
+73-->[androidx.emoji2:emoji2:1.2.0] C:\Users\win\.gradle\caches\8.13\transforms\19494d48ec90575c10356ba06725d525\transformed\emoji2-1.2.0\AndroidManifest.xml:24:9-32:20
+74            android:name="androidx.startup.InitializationProvider"
+74-->[androidx.emoji2:emoji2:1.2.0] C:\Users\win\.gradle\caches\8.13\transforms\19494d48ec90575c10356ba06725d525\transformed\emoji2-1.2.0\AndroidManifest.xml:25:13-67
+75            android:authorities="com.chaoxing.sign.androidx-startup"
+75-->[androidx.emoji2:emoji2:1.2.0] C:\Users\win\.gradle\caches\8.13\transforms\19494d48ec90575c10356ba06725d525\transformed\emoji2-1.2.0\AndroidManifest.xml:26:13-68
+76            android:exported="false" >
+76-->[androidx.emoji2:emoji2:1.2.0] C:\Users\win\.gradle\caches\8.13\transforms\19494d48ec90575c10356ba06725d525\transformed\emoji2-1.2.0\AndroidManifest.xml:27:13-37
+77            <meta-data
+77-->[androidx.emoji2:emoji2:1.2.0] C:\Users\win\.gradle\caches\8.13\transforms\19494d48ec90575c10356ba06725d525\transformed\emoji2-1.2.0\AndroidManifest.xml:29:13-31:52
+78                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+78-->[androidx.emoji2:emoji2:1.2.0] C:\Users\win\.gradle\caches\8.13\transforms\19494d48ec90575c10356ba06725d525\transformed\emoji2-1.2.0\AndroidManifest.xml:30:17-75
+79                android:value="androidx.startup" />
+79-->[androidx.emoji2:emoji2:1.2.0] C:\Users\win\.gradle\caches\8.13\transforms\19494d48ec90575c10356ba06725d525\transformed\emoji2-1.2.0\AndroidManifest.xml:31:17-49
+80            <meta-data
+80-->[androidx.lifecycle:lifecycle-process:2.7.0] C:\Users\win\.gradle\caches\8.13\transforms\cfeea844abdfd201160109b645c17675\transformed\lifecycle-process-2.7.0\AndroidManifest.xml:29:13-31:52
+81                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+81-->[androidx.lifecycle:lifecycle-process:2.7.0] C:\Users\win\.gradle\caches\8.13\transforms\cfeea844abdfd201160109b645c17675\transformed\lifecycle-process-2.7.0\AndroidManifest.xml:30:17-78
+82                android:value="androidx.startup" />
+82-->[androidx.lifecycle:lifecycle-process:2.7.0] C:\Users\win\.gradle\caches\8.13\transforms\cfeea844abdfd201160109b645c17675\transformed\lifecycle-process-2.7.0\AndroidManifest.xml:31:17-49
+83            <meta-data
+83-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\win\.gradle\caches\8.13\transforms\7f41a58ce27f0d7510a827bab46bb422\transformed\profileinstaller-1.3.0\AndroidManifest.xml:29:13-31:52
+84                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
+84-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\win\.gradle\caches\8.13\transforms\7f41a58ce27f0d7510a827bab46bb422\transformed\profileinstaller-1.3.0\AndroidManifest.xml:30:17-85
+85                android:value="androidx.startup" />
+85-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\win\.gradle\caches\8.13\transforms\7f41a58ce27f0d7510a827bab46bb422\transformed\profileinstaller-1.3.0\AndroidManifest.xml:31:17-49
+86        </provider>
+87
+88        <receiver
+88-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\win\.gradle\caches\8.13\transforms\7f41a58ce27f0d7510a827bab46bb422\transformed\profileinstaller-1.3.0\AndroidManifest.xml:34:9-52:20
+89            android:name="androidx.profileinstaller.ProfileInstallReceiver"
+89-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\win\.gradle\caches\8.13\transforms\7f41a58ce27f0d7510a827bab46bb422\transformed\profileinstaller-1.3.0\AndroidManifest.xml:35:13-76
+90            android:directBootAware="false"
+90-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\win\.gradle\caches\8.13\transforms\7f41a58ce27f0d7510a827bab46bb422\transformed\profileinstaller-1.3.0\AndroidManifest.xml:36:13-44
+91            android:enabled="true"
+91-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\win\.gradle\caches\8.13\transforms\7f41a58ce27f0d7510a827bab46bb422\transformed\profileinstaller-1.3.0\AndroidManifest.xml:37:13-35
+92            android:exported="true"
+92-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\win\.gradle\caches\8.13\transforms\7f41a58ce27f0d7510a827bab46bb422\transformed\profileinstaller-1.3.0\AndroidManifest.xml:38:13-36
+93            android:permission="android.permission.DUMP" >
+93-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\win\.gradle\caches\8.13\transforms\7f41a58ce27f0d7510a827bab46bb422\transformed\profileinstaller-1.3.0\AndroidManifest.xml:39:13-57
+94            <intent-filter>
+94-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\win\.gradle\caches\8.13\transforms\7f41a58ce27f0d7510a827bab46bb422\transformed\profileinstaller-1.3.0\AndroidManifest.xml:40:13-42:29
+95                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
+95-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\win\.gradle\caches\8.13\transforms\7f41a58ce27f0d7510a827bab46bb422\transformed\profileinstaller-1.3.0\AndroidManifest.xml:41:17-91
+95-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\win\.gradle\caches\8.13\transforms\7f41a58ce27f0d7510a827bab46bb422\transformed\profileinstaller-1.3.0\AndroidManifest.xml:41:25-88
+96            </intent-filter>
+97            <intent-filter>
+97-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\win\.gradle\caches\8.13\transforms\7f41a58ce27f0d7510a827bab46bb422\transformed\profileinstaller-1.3.0\AndroidManifest.xml:43:13-45:29
+98                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
+98-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\win\.gradle\caches\8.13\transforms\7f41a58ce27f0d7510a827bab46bb422\transformed\profileinstaller-1.3.0\AndroidManifest.xml:44:17-85
+98-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\win\.gradle\caches\8.13\transforms\7f41a58ce27f0d7510a827bab46bb422\transformed\profileinstaller-1.3.0\AndroidManifest.xml:44:25-82
+99            </intent-filter>
+100            <intent-filter>
+100-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\win\.gradle\caches\8.13\transforms\7f41a58ce27f0d7510a827bab46bb422\transformed\profileinstaller-1.3.0\AndroidManifest.xml:46:13-48:29
+101                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
+101-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\win\.gradle\caches\8.13\transforms\7f41a58ce27f0d7510a827bab46bb422\transformed\profileinstaller-1.3.0\AndroidManifest.xml:47:17-88
+101-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\win\.gradle\caches\8.13\transforms\7f41a58ce27f0d7510a827bab46bb422\transformed\profileinstaller-1.3.0\AndroidManifest.xml:47:25-85
+102            </intent-filter>
+103            <intent-filter>
+103-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\win\.gradle\caches\8.13\transforms\7f41a58ce27f0d7510a827bab46bb422\transformed\profileinstaller-1.3.0\AndroidManifest.xml:49:13-51:29
+104                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
+104-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\win\.gradle\caches\8.13\transforms\7f41a58ce27f0d7510a827bab46bb422\transformed\profileinstaller-1.3.0\AndroidManifest.xml:50:17-95
+104-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\win\.gradle\caches\8.13\transforms\7f41a58ce27f0d7510a827bab46bb422\transformed\profileinstaller-1.3.0\AndroidManifest.xml:50:25-92
+105            </intent-filter>
+106        </receiver>
+107    </application>
+108
+109</manifest>
