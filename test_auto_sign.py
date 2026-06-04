@@ -16,9 +16,9 @@ from chaoxing.teacher import publish_sign, get_active_list_teacher, end_sign_act
 from chaoxing.signin import get_active_list, sign_activity
 
 
-# 账号配置
-TEACHER = {'username': '19136434661', 'password': 'woainima123'}
-STUDENT = {'username': '19102804734', 'password': 'Lsq200671'}
+# 账号配置 (请替换为你的账号)
+TEACHER = {'username': '你的教师账号', 'password': '你的密码'}
+STUDENT = {'username': '你的学生账号', 'password': '你的密码'}
 
 # 课程配置
 COURSE_ID = '264381020'
