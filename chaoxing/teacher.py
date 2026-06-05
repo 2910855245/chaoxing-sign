@@ -166,7 +166,8 @@ def end_sign_active(session: ChaoxingSession, active_id: str,
 def publish_sign(session: ChaoxingSession, course_id: str, class_id: str,
                  title: str = "签到", duration_minutes: int = 10,
                  other_id: int = 0, latitude: float = None,
-                 longitude: float = None, location_range: int = 500) -> dict:
+                 longitude: float = None, location_range: int = 500,
+                 auto_start: bool = True) -> dict:
     """一键发布签到
 
     创建 → 启动 → 设置结束时间
@@ -181,6 +182,7 @@ def publish_sign(session: ChaoxingSession, course_id: str, class_id: str,
         latitude: 纬度（位置签到时使用）
         longitude: 经度（位置签到时使用）
         location_range: 签到范围（米，默认500）
+        auto_start: 是否自动启动（默认True）。设为False则只创建不启动，需手动在网页端启动。
 
     返回: {success, active_id, message}
     """
@@ -193,6 +195,11 @@ def publish_sign(session: ChaoxingSession, course_id: str, class_id: str,
     active_id = result.get('active_id')
     if not active_id:
         return {'success': False, 'message': '获取活动ID失败'}
+
+    # 如果不自动启动，直接返回
+    if not auto_start:
+        logger.info(f"创建签到活动成功（未启动）active_id={active_id}")
+        return {'success': True, 'active_id': active_id, 'message': '创建成功，请在网页端手动启动'}
 
     # 2. 启动活动
     result = start_sign_active(session, active_id, course_id, class_id)
