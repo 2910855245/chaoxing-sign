@@ -13,7 +13,9 @@ from chaoxing.session import ChaoxingSession
 
 
 def create_sign_active(session: ChaoxingSession, course_id: str, class_id: str,
-                       title: str = "签到", other_id: int = 0) -> dict:
+                       title: str = "签到", other_id: int = 0,
+                       latitude: float = None, longitude: float = None,
+                       location_range: int = 500) -> dict:
     """创建签到活动（仅创建，不启动）
 
     Args:
@@ -22,6 +24,9 @@ def create_sign_active(session: ChaoxingSession, course_id: str, class_id: str,
         class_id: 班级ID
         title: 活动标题
         other_id: 签到类型 (0=普通, 2=二维码, 3=手势, 4=位置, 5=签到码)
+        latitude: 纬度（位置签到时使用）
+        longitude: 经度（位置签到时使用）
+        location_range: 签到范围（米，默认500）
 
     返回: {success, active_id, message}
     """
@@ -40,6 +45,12 @@ def create_sign_active(session: ChaoxingSession, course_id: str, class_id: str,
         'timeLong': '600000',
         'lateMinute': '10',
     }
+
+    # 位置签到需要设置坐标
+    if other_id == 4 and latitude is not None and longitude is not None:
+        data['locationLatitude'] = str(latitude)
+        data['locationLongitude'] = str(longitude)
+        data['locationRange'] = str(location_range)
 
     try:
         resp = session.post(url, data=data)
@@ -154,7 +165,8 @@ def end_sign_active(session: ChaoxingSession, active_id: str,
 
 def publish_sign(session: ChaoxingSession, course_id: str, class_id: str,
                  title: str = "签到", duration_minutes: int = 10,
-                 other_id: int = 0) -> dict:
+                 other_id: int = 0, latitude: float = None,
+                 longitude: float = None, location_range: int = 500) -> dict:
     """一键发布签到
 
     创建 → 启动 → 设置结束时间
@@ -166,11 +178,15 @@ def publish_sign(session: ChaoxingSession, course_id: str, class_id: str,
         title: 活动标题
         duration_minutes: 持续时间（分钟）
         other_id: 签到类型 (0=普通, 2=二维码, 3=手势, 4=位置, 5=签到码)
+        latitude: 纬度（位置签到时使用）
+        longitude: 经度（位置签到时使用）
+        location_range: 签到范围（米，默认500）
 
     返回: {success, active_id, message}
     """
     # 1. 创建活动
-    result = create_sign_active(session, course_id, class_id, title, other_id)
+    result = create_sign_active(session, course_id, class_id, title, other_id,
+                                latitude, longitude, location_range)
     if not result.get('success'):
         return result
 

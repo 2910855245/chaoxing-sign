@@ -38,7 +38,8 @@ class ChaoxingSession(private val context: Context) {
         private set
     var name: String = prefs.getString("name", "") ?: ""
         private set
-    var isLoggedIn: Boolean = uid.isNotEmpty()
+    // 检查是否有保存的登录凭证（uid不为空且有保存的cookie）
+    var isLoggedIn: Boolean = uid.isNotEmpty() && prefs.getString("cookies", null) != null
         private set
 
     fun login(username: String, password: String): Boolean {
@@ -61,14 +62,18 @@ class ChaoxingSession(private val context: Context) {
 
             if (success) {
                 // 从 cookie 提取 uid
-                val allCookies = cookieJar.loadForRequest("https://chaoxing.com".toHttpUrl())
-                android.util.Log.d("ChaoxingSession", "Cookie数量: ${allCookies.size}")
+                try {
+                    val allCookies = cookieJar.loadForRequest("https://chaoxing.com".toHttpUrl())
+                    android.util.Log.d("ChaoxingSession", "Cookie数量: ${allCookies.size}")
 
-                for (c in allCookies) {
-                    when (c.name) {
-                        "UID", "_uid" -> uid = c.value
-                        "fid" -> fid = c.value
+                    for (c in allCookies) {
+                        when (c.name) {
+                            "UID", "_uid" -> uid = c.value
+                            "fid" -> fid = c.value
+                        }
                     }
+                } catch (e: Exception) {
+                    android.util.Log.w("ChaoxingSession", "Cookie提取异常: ${e.message}")
                 }
 
                 // 如果还是没有uid，尝试从响应中获取
@@ -76,9 +81,15 @@ class ChaoxingSession(private val context: Context) {
                     uid = json.optString("uid", "")
                 }
 
-                // 获取用户信息
-                val info = getUserInfo()
-                name = info.optString("name", "")
+                // 获取用户信息（不阻塞登录）
+                try {
+                    val info = getUserInfo()
+                    name = info.optString("name", "")
+                } catch (e: Exception) {
+                    android.util.Log.w("ChaoxingSession", "获取用户信息失败: ${e.message}")
+                    // 使用已保存的name或默认值
+                    if (name.isEmpty()) name = username
+                }
 
                 android.util.Log.d("ChaoxingSession", "登录成功: uid=$uid, fid=$fid, name=$name")
                 isLoggedIn = true
@@ -94,7 +105,7 @@ class ChaoxingSession(private val context: Context) {
             }
             success
         } catch (e: Exception) {
-            android.util.Log.e("ChaoxingSession", "登录异常: ${e.message}")
+            android.util.Log.e("ChaoxingSession", "登录异常: ${e.javaClass.simpleName}: ${e.message}")
             false
         }
     }

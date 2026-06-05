@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.chaoxing.sign.ChaoxingApp
 import com.chaoxing.sign.R
 import com.chaoxing.sign.api.*
 import kotlinx.coroutines.Dispatchers
@@ -22,14 +23,18 @@ class SignActivity : AppCompatActivity() {
     private lateinit var session: ChaoxingSession
     private lateinit var rvActivities: RecyclerView
     private lateinit var tvStatus: TextView
+    private lateinit var llLoading: View
     private var courseId: String = ""
     private var classId: String = ""
+    private var dataLoaded = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign)
 
-        session = ChaoxingSession(this)
+        // 使用全局共享 session
+        val app = application as ChaoxingApp
+        session = app.session ?: ChaoxingSession(this).also { app.session = it }
         courseId = intent.getStringExtra("courseId") ?: ""
         classId = intent.getStringExtra("classId") ?: ""
 
@@ -39,6 +44,7 @@ class SignActivity : AppCompatActivity() {
 
         rvActivities = findViewById(R.id.rv_activities)
         tvStatus = findViewById(R.id.tv_status)
+        llLoading = findViewById(R.id.ll_loading)
         rvActivities.layoutManager = LinearLayoutManager(this)
 
         // 先自动登录，再加载活动
@@ -55,7 +61,20 @@ class SignActivity : AppCompatActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        // 从 LocationSignActivity 返回时刷新列表（仅在数据已加载过的情况下）
+        if (dataLoaded && ::session.isInitialized && session.isLoggedIn) {
+            loadActivities()
+        }
+    }
+
     private fun loadActivities() {
+        // 显示加载动画
+        llLoading.visibility = View.VISIBLE
+        rvActivities.visibility = View.GONE
+        tvStatus.visibility = View.GONE
+
         lifecycleScope.launch {
             try {
                 val activities = withContext(Dispatchers.IO) {
@@ -65,14 +84,20 @@ class SignActivity : AppCompatActivity() {
                 // 调试信息
                 android.util.Log.d("SignActivity", "获取到 ${activities.size} 个活动, courseId=$courseId, classId=$classId")
 
+                // 隐藏加载动画
+                llLoading.visibility = View.GONE
+                dataLoaded = true
+
                 if (activities.isEmpty()) {
                     tvStatus.text = "暂无签到活动\n课程ID: $courseId\n班级ID: $classId"
                     tvStatus.visibility = View.VISIBLE
                 } else {
                     tvStatus.visibility = View.GONE
+                    rvActivities.visibility = View.VISIBLE
                     rvActivities.adapter = ActivityAdapter(activities, ::handleSign)
                 }
             } catch (e: Exception) {
+                llLoading.visibility = View.GONE
                 android.util.Log.e("SignActivity", "加载失败: ${e.message}", e)
                 Toast.makeText(this@SignActivity, "加载失败: ${e.message}", Toast.LENGTH_SHORT).show()
             }

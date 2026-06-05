@@ -202,8 +202,21 @@ def get_active_detail(session: ChaoxingSession, active_id: str) -> dict:
         return {}
 
 
-def check_real_sign_status(session: ChaoxingSession, active_id: str) -> bool:
-    """检查真实的签到状态（使用活动详情API）"""
+def check_real_sign_status(session: ChaoxingSession, active_id: str,
+                           course_id: str = None, class_id: str = None) -> bool:
+    """检查真实的签到状态
+
+    优先使用 activelist API（准确），回退到 detail API。
+    注意：getPPTActiveInfo API 对位置签到返回错误的 userStatus。
+    """
+    # 如果有课程信息，用 activelist API（更准确）
+    if course_id and class_id:
+        acts = get_active_list(session, course_id, class_id)
+        for a in acts:
+            if str(a['activeId']) == str(active_id):
+                return a.get('userStatus') == 1
+
+    # 回退到详情 API
     detail = get_active_detail(session, active_id)
     user_status = detail.get('userStatus')
     return user_status == 1

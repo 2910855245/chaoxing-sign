@@ -7,6 +7,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.chaoxing.sign.ChaoxingApp
 import com.chaoxing.sign.R
 import com.chaoxing.sign.api.ChaoxingSession
 import kotlinx.coroutines.Dispatchers
@@ -43,6 +44,8 @@ class LoginActivity : AppCompatActivity() {
 
                     if (ok) {
                         session.saveSession(username, password)
+                        // 保存到全局 Application
+                        (application as ChaoxingApp).session = session
                         startActivity(Intent(this@LoginActivity, HomeActivity::class.java))
                         finish()
                     } else {

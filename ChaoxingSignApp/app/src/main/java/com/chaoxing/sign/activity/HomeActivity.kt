@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.chaoxing.sign.ChaoxingApp
 import com.chaoxing.sign.R
 import com.chaoxing.sign.api.ChaoxingApi
 import com.chaoxing.sign.api.ChaoxingSession
@@ -32,7 +33,12 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
-        session = ChaoxingSession(this)
+        // 使用全局共享 session
+        val app = application as ChaoxingApp
+        if (app.session == null) {
+            app.session = ChaoxingSession(this)
+        }
+        session = app.session!!
         if (!session.loadSavedSession()) {
             startActivity(Intent(this, LoginActivity::class.java))
             finish()

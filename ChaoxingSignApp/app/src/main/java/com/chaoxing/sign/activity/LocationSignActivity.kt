@@ -20,6 +20,7 @@ import com.amap.api.maps.model.BitmapDescriptorFactory
 import com.amap.api.maps.model.CircleOptions
 import com.amap.api.maps.model.LatLng
 import com.amap.api.maps.model.MarkerOptions
+import com.chaoxing.sign.ChaoxingApp
 import com.chaoxing.sign.R
 import com.chaoxing.sign.api.ChaoxingApi
 import com.chaoxing.sign.api.ChaoxingSession
@@ -58,8 +59,19 @@ class LocationSignActivity : AppCompatActivity() {
         AMapLocationClient.updatePrivacyShow(this, true, true)
         AMapLocationClient.updatePrivacyAgree(this, true)
 
-        session = ChaoxingSession(this)
-        session.autoLogin()
+        // 使用全局共享 session
+        val app = application as ChaoxingApp
+        session = app.session ?: ChaoxingSession(this).also { app.session = it }
+        // 确保登录
+        if (!session.isLoggedIn) {
+            lifecycleScope.launch {
+                val ok = withContext(Dispatchers.IO) { session.autoLogin() }
+                if (!ok) {
+                    Toast.makeText(this@LocationSignActivity, "未登录，请先在首页登录", Toast.LENGTH_LONG).show()
+                    finish()
+                }
+            }
+        }
 
         activeId = intent.getLongExtra("activeId", 0)
         courseId = intent.getStringExtra("courseId") ?: ""
@@ -121,7 +133,14 @@ class LocationSignActivity : AppCompatActivity() {
     }
 
     private fun initMap() {
-        mapView.onCreate(null)
+        try {
+            mapView.onCreate(null)
+        } catch (e: Exception) {
+            android.util.Log.e("LocationSign", "mapView.onCreate失败: ${e.message}")
+            Toast.makeText(this, "地图初始化失败: ${e.message}", Toast.LENGTH_LONG).show()
+            finish()
+            return
+        }
         aMap = mapView.map
         aMap.uiSettings.isZoomControlsEnabled = true
         aMap.uiSettings.isScrollGesturesEnabled = true
@@ -176,6 +195,7 @@ class LocationSignActivity : AppCompatActivity() {
             val locationClient = AMapLocationClient(this)
             val option = AMapLocationClientOption()
             option.isOnceLocation = true
+            option.locationMode = AMapLocationClientOption.AMapLocationMode.Hight_Accuracy
             locationClient.setLocationOption(option)
             locationClient.setLocationListener { location ->
                 if (location != null && location.errorCode == 0) {
@@ -188,13 +208,18 @@ class LocationSignActivity : AppCompatActivity() {
                         .title("当前位置")
                         .snippet(selectedAddress)
                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)))
+                    aMap.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(selectedLat, selectedLon), 15f))
                     updateInfo()
+                    Toast.makeText(this, "定位成功", Toast.LENGTH_SHORT).show()
+                } else {
+                    val errorMsg = location?.errorInfo ?: "未知错误"
+                    Toast.makeText(this, "定位失败: $errorMsg", Toast.LENGTH_LONG).show()
                 }
                 locationClient.stopLocation()
             }
             locationClient.startLocation()
         } catch (e: Exception) {
-            // 定位失败，使用默认位置
+            Toast.makeText(this, "定位初始化失败: ${e.message}", Toast.LENGTH_LONG).show()
         }
     }
 
@@ -234,9 +259,13 @@ class LocationSignActivity : AppCompatActivity() {
     }
 
     private fun doSign() {
+        android.util.Log.e("LocationSign", "doSign: activeId=$activeId, lat=$selectedLat, lon=$selectedLon")
+        Toast.makeText(this, "activeId=$activeId, isLoggedIn=${session.isLoggedIn}", Toast.LENGTH_SHORT).show()
+
         // 检查是否在范围内
         if (targetLat != 0.0 && targetLon != 0.0) {
             val distance = calculateDistance(selectedLat, selectedLon, targetLat, targetLon)
+            android.util.Log.e("LocationSign", "distance=$distance, range=$targetRange")
             if (distance > targetRange) {
                 Toast.makeText(this, "不在签到范围内（距离${String.format("%.1f", distance)}米）", Toast.LENGTH_LONG).show()
                 return
@@ -245,10 +274,13 @@ class LocationSignActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             try {
+                android.util.Log.e("LocationSign", "calling preSign...")
                 val result = withContext(Dispatchers.IO) {
                     ChaoxingApi.preSign(session, activeId, courseId, classId)
+                    android.util.Log.e("LocationSign", "calling signLocation...")
                     ChaoxingApi.signLocation(session, activeId, selectedLat, selectedLon, selectedAddress)
                 }
+                android.util.Log.e("LocationSign", "result: $result")
                 val success = result.contains("success") || result.contains("已签到")
                 Toast.makeText(
                     this@LocationSignActivity,
@@ -257,6 +289,7 @@ class LocationSignActivity : AppCompatActivity() {
                 ).show()
                 if (success) finish()
             } catch (e: Exception) {
+                android.util.Log.e("LocationSign", "exception: ${e.message}")
                 Toast.makeText(this@LocationSignActivity, "错误: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         }

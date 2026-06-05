@@ -189,10 +189,23 @@ object ChaoxingApi {
     }
 
     // ─── 检查真实签到状态 ───
-    fun checkRealSignStatus(session: ChaoxingSession, activeId: Long): Boolean {
+    // 注意：getPPTActiveInfo API 对位置签到返回错误的 userStatus
+    // 优先使用 activelist API 检查
+    fun checkRealSignStatus(session: ChaoxingSession, activeId: Long,
+                            courseId: String? = null, classId: String? = null): Boolean {
+        // 如果有课程信息，用 activelist API（更准确）
+        if (courseId != null && classId != null) {
+            val acts = getActiveList(session, courseId, classId)
+            val act = acts.find { it.activeId == activeId }
+            if (act != null) {
+                android.util.Log.d("ChaoxingApi", "检查签到状态(activelist): activeId=$activeId, userStatus=${act.userStatus}")
+                return act.userStatus == 1
+            }
+        }
+        // 回退到详情 API
         val detail = getActiveDetail(session, activeId)
         val userStatus = detail.optInt("userStatus", 0)
-        android.util.Log.d("ChaoxingApi", "检查签到状态: activeId=$activeId, userStatus=$userStatus")
+        android.util.Log.d("ChaoxingApi", "检查签到状态(detail): activeId=$activeId, userStatus=$userStatus")
         return userStatus == 1
     }
 
