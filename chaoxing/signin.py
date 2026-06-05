@@ -206,15 +206,23 @@ def check_real_sign_status(session: ChaoxingSession, active_id: str,
                            course_id: str = None, class_id: str = None) -> bool:
     """检查真实的签到状态
 
-    优先使用 activelist API（准确），回退到 detail API。
-    注意：getPPTActiveInfo API 对位置签到返回错误的 userStatus。
+    使用 stuSignajax API 检查（最准确）：
+    - 返回"您已签到过了" → 已签到
+    - 返回"success" → 未签到（刚签到成功）
+    - 返回其他 → 未签到
+
+    注意：activelist API 返回错误的 userStatus，getPPTActiveInfo 也不准确。
     """
-    # 如果有课程信息，用 activelist API（更准确）
-    if course_id and class_id:
-        acts = get_active_list(session, course_id, class_id)
-        for a in acts:
-            if str(a['activeId']) == str(active_id):
-                return a.get('userStatus') == 1
+    # 使用 stuSignajax API 检查（最准确）
+    params = f'activeId={active_id}&uid={session.uid}&clientip=&latitude=-1&longitude=-1&appType=15&fid={session.fid}&name={session.get_user_info().get("name", "")}'
+    url = f'https://mobilelearn.chaoxing.com/pptSign/stuSignajax?{params}'
+    try:
+        resp = session.get(url, referer='https://mobilelearn.chaoxing.com/')
+        text = resp.text()
+        # "您已签到过了" 表示已签到
+        return text == "您已签到过了"
+    except Exception:
+        pass
 
     # 回退到详情 API
     detail = get_active_detail(session, active_id)

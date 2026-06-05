@@ -189,24 +189,23 @@ object ChaoxingApi {
     }
 
     // ─── 检查真实签到状态 ───
-    // 注意：getPPTActiveInfo API 对位置签到返回错误的 userStatus
-    // 优先使用 activelist API 检查
+    // 使用 stuSignajax API 检查（最准确）
+    // 返回"您已签到过了"表示已签到
     fun checkRealSignStatus(session: ChaoxingSession, activeId: Long,
                             courseId: String? = null, classId: String? = null): Boolean {
-        // 如果有课程信息，用 activelist API（更准确）
-        if (courseId != null && classId != null) {
-            val acts = getActiveList(session, courseId, classId)
-            val act = acts.find { it.activeId == activeId }
-            if (act != null) {
-                android.util.Log.d("ChaoxingApi", "检查签到状态(activelist): activeId=$activeId, userStatus=${act.userStatus}")
-                return act.userStatus == 1
-            }
+        val name = session.name
+        val url = "https://mobilelearn.chaoxing.com/pptSign/stuSignajax" +
+                "?activeId=$activeId&uid=${session.uid}&clientip=" +
+                "&latitude=-1&longitude=-1&appType=15&fid=${session.fid}&name=$name"
+        return try {
+            val result = session.get(url, "https://mobilelearn.chaoxing.com/")
+            val signed = result == "您已签到过了"
+            android.util.Log.d("ChaoxingApi", "检查签到状态: activeId=$activeId, result=$result, signed=$signed")
+            signed
+        } catch (e: Exception) {
+            android.util.Log.e("ChaoxingApi", "检查签到状态失败: ${e.message}")
+            false
         }
-        // 回退到详情 API
-        val detail = getActiveDetail(session, activeId)
-        val userStatus = detail.optInt("userStatus", 0)
-        android.util.Log.d("ChaoxingApi", "检查签到状态(detail): activeId=$activeId, userStatus=$userStatus")
-        return userStatus == 1
     }
 
     // ─── 预签到 ───
